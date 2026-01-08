@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  email         String    @unique
+  name          String?
+  password      String // Hashed with bcrypt/argon2 in code
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  expenses      Expense[]
+  categories    Category[] // Custom categories user added
+  budgetGoal    Int?      // Monthly budget in TND (e.g., 2500)
+  currency      String    @default("TND") // Future: USD/EUR
+
+  @@map("users")
+}
+model Category {
+  categoryid        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  icon      String?  // e.g., "shopping-cart", "car" (Lucide icon name)
+  color     String?  // Hex for custom color (optional)
+  isDefault Boolean  @default(false) // True for predefined
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  expenses  Expense[]
+  @@unique([ userId]) // Prevent duplicates per user
+  @@map("categories")
+}
+model Expense {
+  modelid        String   @id @default(cuid())
+  amount         Float
+  description    String?
+  date           DateTime // Transaction date (when spent/planned)
+  categoryId     String
+  category       Category @relation(fields: [categoryId], references: [categoryid])
+  paymentMethod  String   @default("CASH") // CASH, CARD, TRANSFER
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("expenses")
+}
