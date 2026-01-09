@@ -3,9 +3,28 @@
 import { useState } from "react";
 import EyeIcon from "@/app/icons/eye-icon.svg";
 import GoogleIcon from "@/app/icons/google-icon.svg";
+import { signUp } from "@/app/actions/auth";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  async function handleSubmit(formData: FormData) {
+    setLoading(true);
+    setError(null);
+
+    const result = await signUp(formData);
+
+    if (result?.error) {
+      setError(result.error);
+      setLoading(false);
+    } else {
+      router.push("/login");
+    }
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -22,15 +41,23 @@ export default function RegisterForm() {
           </h1>
         </div>
 
-        <form className="space-y-6">
+        <form action={handleSubmit} className="space-y-6">
+          {error && (
+            <div className="p-3 text-sm text-red-500 bg-red-50 border border-red-200 rounded-lg">
+              {error}
+            </div>
+          )}
+
           {/* Full Name Field */}
           <div className="space-y-3">
             <label className="block text-sm font-normal text-[#344054] capitalize font-gilroy">
               Full Name
             </label>
             <input
+              name="name"
               type="text"
-              placeholder="test123"
+              placeholder="Full Name"
+              required
               className="w-full px-4 py-3 text-sm rounded-lg border-4 border-[#d1e9ff] focus:outline-none focus:border-blue-400 font-gilroy placeholder:font-gilroy"
             />
           </div>
@@ -41,8 +68,10 @@ export default function RegisterForm() {
               Email
             </label>
             <input
+              name="email"
               type="email"
-              placeholder="Test123@gmail.com"
+              placeholder="Email address"
+              required
               className="w-full px-4 py-3 text-sm rounded-lg border-4 border-[#d1e9ff] focus:outline-none focus:border-blue-400 font-gilroy placeholder:font-gilroy"
             />
           </div>
@@ -62,8 +91,10 @@ export default function RegisterForm() {
             </div>
             <div className="relative">
               <input
+                name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
+                required
                 className="w-full px-4 py-3 text-sm rounded-lg border border-[#d0d5dd] focus:outline-none focus:border-blue-400 placeholder-[#98a2b3] font-gilroy placeholder:font-gilroy"
               />
               <button
@@ -79,9 +110,10 @@ export default function RegisterForm() {
           {/* Create Account Button */}
           <button
             type="submit"
-            className="w-full bg-[#1570ef] text-white text-base font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors font-gilroy"
+            disabled={loading}
+            className="w-full bg-[#1570ef] text-white text-base font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors font-gilroy disabled:opacity-50"
           >
-            Create account
+            {loading ? "Creating account..." : "Create account"}
           </button>
 
           {/* Continue with Google Button */}
