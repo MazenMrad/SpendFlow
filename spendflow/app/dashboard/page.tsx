@@ -29,86 +29,87 @@ async function DashboardContent() {
     redirect("/login");
   }
     */
+export default function DashboardPage() {
 
-//return (
-<div className="flex">
-  {/* Sidebar */}
-  <Sidebar />
+  return (
+    <div className="flex">
+      {/* Sidebar */}
+      <Sidebar />
 
-  {/* Main Content */}
-  <div className="ml-64 w-[calc(100%-16rem)]">
-    {/* Header */}
-    <Header />
+      {/* Main Content */}
+      <div className="ml-64 w-[calc(100%-16rem)]">
+        {/* Header */}
+        <Header title="Dashboard" />
 
-    {/* Content Area */}
-    <div className="mt-24 px-8 pb-12 space-y-8">
-      {/* Top Section: Monthly Spending Overview */}
-      <div className="grid grid-cols-3 gap-8">
-        {/* Chart (spans 2 columns) */}
-        <div className="col-span-2">
-          <MonthlySpendingChart />
-        </div>
+        {/* Content Area */}
+        <div className="mt-24 px-8 pb-12 space-y-8">
+          {/* Top Section: Monthly Spending Overview */}
+          <div className="grid grid-cols-3 gap-8">
+            {/* Chart (spans 2 columns) */}
+            <div className="col-span-2">
+              <MonthlySpendingChart />
+            </div>
 
-        {/* Metrics and Success Message */}
-        <div className="flex flex-col gap-6">
-          {/* Monthly Spending Metric */}
-          <MetricsCard
-            label="Monthly Spending"
-            amount="250 TND"
-            change="8%"
-            changeSign="down"
-          />
+            {/* Metrics and Success Message */}
+            <div className="flex flex-col gap-6">
+              {/* Monthly Spending Metric */}
+              <MetricsCard
+                label="Monthly Spending"
+                amount="250 TND"
+                change="8%"
+                changeSign="down"
+              />
 
-          {/* Remaining Budget */}
-          <MetricsCard
-            label="Remaining Budget"
-            amount="1,250 TND"
-            change="12%"
-            changeSign="up"
-          />
+              {/* Remaining Budget */}
+              <MetricsCard
+                label="Remaining Budget"
+                amount="1,250 TND"
+                change="12%"
+                changeSign="up"
+              />
 
-          {/* Groceries & Dining */}
-          <MetricsCard
-            label="Groceries & Dining"
-            amount="300 TND"
-          />
+              {/* Groceries & Dining */}
+              <MetricsCard
+                label="Groceries & Dining"
+                amount="300 TND"
+              />
 
-          {/* Success Message */}
-          <div className="bg-white rounded-lg p-4 shadow-md">
-            <div className="flex items-start gap-3 mb-2">
-              <SuccessIcon className="w-6 h-7 flex-shrink-0" />
-              <div className="flex-1">
-                <p className="text-sm font-medium text-[#1c1f37]">
-                  You're doing good!
-                </p>
-                <p className="text-xs font-medium text-[#1c1f37] opacity-50 leading-[18px] mt-1">
-                  You're doing good! Spending 10% lower than last month.
-                </p>
+              {/* Success Message */}
+              <div className="bg-white rounded-lg p-4 shadow-md">
+                <div className="flex items-start gap-3 mb-2">
+                  <SuccessIcon className="w-6 h-7 flex-shrink-0" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-[#1c1f37]">
+                      You're doing good!
+                    </p>
+                    <p className="text-xs font-medium text-[#1c1f37] opacity-50 leading-[18px] mt-1">
+                      You're doing good! Spending 10% lower than last month.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Middle Section: Spending by Category & Upcoming Bills */}
-      <div className="grid grid-cols-3 gap-8">
-        {/* Upcoming Bills */}
-        <div className="col-span-2">
-          <UpcomingBills />
-        </div>
+          {/* Middle Section: Spending by Category & Upcoming Bills */}
+          <div className="grid grid-cols-3 gap-8">
+            {/* Upcoming Bills */}
+            <div className="col-span-2">
+              <UpcomingBills />
+            </div>
 
-        {/* Spending by Category */}
-        <div>
-          <SpendingByCategoryChart />
-        </div>
-      </div>
+            {/* Spending by Category */}
+            <div>
+              <SpendingByCategoryChart />
+            </div>
+          </div>
 
-      {/* Bottom Section: Recent Transactions */}
-      <div>
-        <RecentTransactions />
+          {/* Bottom Section: Recent Transactions */}
+          <div>
+            <RecentTransactions />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-//);
-//}
+  );
+}

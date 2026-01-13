@@ -2,23 +2,36 @@
 
 import NotificationIcon from "@/app/icons/notification-icon.svg";
 
-export default function Header() {
-  return (
-    <div className="fixed top-0 right-0 left-64 h-24 bg-white border-b border-[#dadada] flex items-center justify-between px-8 z-10">
-      <h1 className="text-4xl font-bold text-[#1c1f37] font-gilroy">
-        Dashboard
-      </h1>
+import { Bell, ChevronDown } from "lucide-react";
 
-      <div className="flex items-center gap-6">
-        <NotificationIcon className="w-8 h-8" />
-        <div className="flex items-center gap-3 pl-6 border-l border-[#dadada]">
-          <div className="w-9 h-9 bg-gray-400 rounded-full" />
-          <span className="text-sm font-bold text-black font-gilroy">
-            Mazen Mrad
-          </span>
-          <svg className="w-2.5 h-2 bg-gray-600 rounded-full" />
+interface HeaderProps {
+  title: string;
+}
+
+export default function Header({ title }: HeaderProps) {
+  return (
+    <div className="h-[95px] bg-white border border-[rgba(0,0,0,0.46)] flex items-center justify-between px-4 md:px-10">
+      <h1 className="text-2xl md:text-[32px] font-bold text-[#1C1F37]">{title}</h1>
+
+      <div className="flex items-center gap-2 md:gap-5">
+        <button className="relative p-2 hover:bg-gray-100 rounded-full transition-colors">
+          <Bell className="w-5 h-5 text-gray-600" />
+          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
+        
+        <div className="w-px h-10 bg-[#DADADA]"></div>
+        
+        <div className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 rounded-lg px-2 py-1 transition-colors">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+            <span className="text-white font-bold text-sm">MM</span>
+          </div>
+          <span className="font-bold text-sm text-black hidden sm:inline">Mazen Mrad</span>
+          <button className="w-5 h-6 border border-[rgba(88,85,85,0.24)] rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+            <ChevronDown className="w-4 h-4 text-[#9A9A9A]" />
+          </button>
         </div>
       </div>
     </div>
   );
 }
+

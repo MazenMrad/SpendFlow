@@ -11,12 +11,10 @@ export async function signUp(formData: FormData) {
     if (!email || !password || !name) {
         return { error: "Name, email and password are required" };
     }
-
     try {
         const existingUser = await prisma.user.findUnique({
             where: { email },
         });
-
         if (existingUser) {
             return { error: "User already exists" };
         }
