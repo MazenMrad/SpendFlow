@@ -31,16 +31,18 @@ export default function LandingHero() {
           <p className="text-lg text-[#575455] font-gilroy mb-10 max-w-[450px] leading-[1.6]">
             Our tracker helps you categorize expenses, set limits, and reach your savings goals with zero effort
           </p>
-          <button className="bg-[#1570ef] text-white px-10 py-4 rounded-full font-semibold text-base hover:bg-blue-700 transition-colors font-gilroy">
-            Get Started
-          </button>
+          <a href="/register">
+            <button className="cursor-pointer bg-[#1570ef] text-white px-10 py-4 rounded-full font-semibold text-base hover:bg-blue-700 transition-colors font-gilroy">
+              Get Started
+            </button>
+          </a>
         </div>
 
         {/* Right Dashboard Card */}
         <div className="lg:w-[55%] w-full">
           <div className="bg-white rounded-2xl shadow-[0px_5px_10px_#f1f2fa] border border-[#dadada] overflow-hidden">
             <div className="flex items-center justify-between p-6 border-b border-[#dadada]">
-            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-[#017efa] rounded-lg flex items-center justify-center">
                   <ChartIcon className="w-6 h-6 text-white" />
                 </div>
@@ -49,9 +51,9 @@ export default function LandingHero() {
                 </h3>
               </div>
               <div className="flex gap-4">
-                <button className="text-[#017efa] font-bold text-lg font-gilroy">Daily</button>
-                <button className="text-[#a9abb0] font-normal text-lg font-gilroy">Weekly</button>
-                <button className="text-[#a9abb0] font-normal text-lg font-gilroy">Monthly</button>
+                <button className="text-[#017efa] font-bold text-lg font-gilroy cursor-pointer">Daily</button>
+                <button className="text-[#a9abb0] font-normal text-lg font-gilroy cursor-pointer">Weekly</button>
+                <button className="text-[#a9abb0] font-normal text-lg font-gilroy cursor-pointer">Monthly</button>
               </div>
             </div>
 
@@ -61,41 +63,41 @@ export default function LandingHero() {
                   <AreaChart data={data}>
                     <defs>
                       <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#017efa" stopOpacity={0.1}/>
-                        <stop offset="95%" stopColor="#017efa" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#017efa" stopOpacity={0.1} />
+                        <stop offset="95%" stopColor="#017efa" stopOpacity={0} />
                       </linearGradient>
                       <linearGradient id="colorDaily" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#fd1f9b" stopOpacity={0.1}/>
-                        <stop offset="95%" stopColor="#fd1f9b" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#fd1f9b" stopOpacity={0.1} />
+                        <stop offset="95%" stopColor="#fd1f9b" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid vertical={false} stroke="#dadada" strokeDasharray="3 3" />
-                    <XAxis 
-                      dataKey="name" 
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{ fill: "#8e8e8e", fontSize: 12 }} 
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#8e8e8e", fontSize: 12 }}
                     />
-                    <YAxis 
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{ fill: "#8e8e8e", fontSize: 12 }} 
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#8e8e8e", fontSize: 12 }}
                     />
-                    <Area 
-                      type="monotone" 
-                      dataKey="total" 
-                      stroke="#017efa" 
-                      strokeWidth={3} 
-                      fillOpacity={1} 
-                      fill="url(#colorTotal)" 
+                    <Area
+                      type="monotone"
+                      dataKey="total"
+                      stroke="#017efa"
+                      strokeWidth={3}
+                      fillOpacity={1}
+                      fill="url(#colorTotal)"
                     />
-                    <Area 
-                      type="monotone" 
-                      dataKey="daily" 
-                      stroke="#fd1f9b" 
-                      strokeWidth={3} 
-                      fillOpacity={1} 
-                      fill="url(#colorDaily)" 
+                    <Area
+                      type="monotone"
+                      dataKey="daily"
+                      stroke="#fd1f9b"
+                      strokeWidth={3}
+                      fillOpacity={1}
+                      fill="url(#colorDaily)"
                     />
                   </AreaChart>
                 </ResponsiveContainer>

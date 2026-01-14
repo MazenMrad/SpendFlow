@@ -12,102 +12,72 @@ const categoryData = [
 
 export default function LandingControl() {
   return (
-    <section className="bg-[#f9fafb] py-24 px-16 overflow-hidden relative">
-      <Vector1 className="absolute top-0 left-0 w-full h-auto opacity-10 pointer-events-none" />
-      <VectorMain className="absolute bottom-0 right-0 w-full h-auto opacity-10 pointer-events-none" />
-      
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-24 relative z-10">
-        {/* Left Visual Area */}
-        <div className="lg:w-1/2 relative">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-[450px] relative z-10 border border-[#dadada]">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#dadada]">
-              <h3 className="text-xl font-bold text-[#1c1f37] font-gilroy">Spending by Category</h3>
-              <button className="text-[#017efa] text-sm font-medium font-gilroy">View Report</button>
-            </div>
-            
-            <div className="mb-8">
-              <div className="text-sm text-[#8e8e8e] font-gilroy mb-1">Order Time</div>
-              <div className="text-xs text-[#8e8e8e]/50 font-gilroy">January 2026</div>
-            </div>
+    <section className="w-full bg-[rgba(230,242,254,0.28)] py-16 sm:py-20 lg:py-24 relative overflow-hidden">
+      {/* Decorative blue shape */}
+      <svg
+        className="absolute left-0 top-0 opacity-20 w-48 sm:w-64 lg:w-96 h-auto"
+        viewBox="0 0 761 761"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          opacity="0.2"
+          d="M761 0.000133057C761 420.072 420.072 761 0 761L0.000133057 0L761 0.000133057Z"
+          fill="#017EFA"
+          fillOpacity="0.46"
+        />
+      </svg>
 
-            <div className="h-[250px] relative">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={categoryData}
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {categoryData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="absolute inset-0 flex items-center justify-center flex-col">
-                <span className="text-2xl font-bold text-[#1c1f37] font-gilroy leading-tight text-center">
-                  1230 TND<br /><span className="text-xs font-medium text-[#8e8e8e]">Spent</span>
-                </span>
-              </div>
-            </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+          {/* Left Side - Images/Graphics */}
+          <div className="relative order-2 lg:order-1">
+            <img
+              src="https://api.builder.io/api/v1/image/assets/TEMP/b8d8b822f33fc18e8053c954dbd3307264e55784?width=856"
+              alt="Spending Analytics"
+              className="w-full max-w-md mx-auto lg:mx-0 h-auto"
+            />
 
-            <div className="flex justify-center gap-6 mt-8">
-              {categoryData.map((item, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
-                  <span className="text-sm font-medium text-[#1c1f37] font-gilroy">{item.name}</span>
-                </div>
-              ))}
-            </div>
+            {/* Decorative icons */}
+            <img
+              src="https://api.builder.io/api/v1/image/assets/TEMP/098e4a1487864be51502c956d488a9ebf04956d0?width=100"
+              alt=""
+              className="absolute top-4 right-12 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12"
+            />
+            <img
+              src="https://api.builder.io/api/v1/image/assets/TEMP/94949d9b11b53f729fba1ebdcf53463cf20bd7f4?width=100"
+              alt=""
+              className="absolute bottom-32 left-0 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12"
+            />
+            <img
+              src="https://api.builder.io/api/v1/image/assets/TEMP/82754a94185a10e144b116994f9fe534e5166533?width=100"
+              alt=""
+              className="absolute bottom-8 left-16 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12"
+            />
           </div>
 
-          {/* Overlapping Summary Card */}
-          <div className="absolute top-[60%] -right-24 bg-[#081a51] text-white rounded-xl p-8 shadow-2xl z-20 w-[320px] border border-white/10">
-            <h4 className="text-base font-medium font-gilroy mb-6 opacity-80">January 2026 Summary</h4>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-[#fd1f9b] rounded-full"></div>
-                  <span className="text-sm opacity-70 font-gilroy">Total Expenses</span>
-                </div>
-                <span className="text-sm font-bold font-gilroy">1480 TND</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-[#30d987] rounded-full"></div>
-                  <span className="text-sm opacity-70 font-gilroy">Compared to Last Month</span>
-                </div>
-                <span className="text-sm font-bold font-gilroy">220 TND</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-[#017efa] rounded-full"></div>
-                  <span className="text-sm opacity-70 font-gilroy">Top Category</span>
-                </div>
-                <span className="text-sm font-bold font-gilroy">600 TND</span>
-              </div>
-            </div>
-          </div>
-        </div>
+          {/* Right Side - Content */}
+          <div className="flex flex-col gap-6 sm:gap-8 order-1 lg:order-2">
+            <p className="text-[#F75C4E] text-sm sm:text-base font-gilroy-bold font-poppins tracking-wider">
+              SAVE MORE TIME
+            </p>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-gilroy-bold text-black">
+              Take Control of Your Finances
+            </h2>
+            <p className="text-[#575455] text-base sm:text-lg font-gilroy-medium leading-relaxed">
+              Track your expenses effortlessly, gain insights into your spending, and build better financial habits.
+            </p>
 
-        {/* Right Text Content */}
-        <div className="lg:w-1/2">
-          <span className="text-[#f75c4e] font-bold text-sm tracking-widest uppercase mb-4 block font-poppins">
-            SAVE MORE TIME
-          </span>
-          <h2 className="text-[44px] leading-[1.1] font-bold text-[#1c1f37] font-gilroy mb-8">
-            Take Control of Your Finances
-          </h2>
-          <p className="text-xl text-[#575455] leading-relaxed font-gilroy mb-12">
-            Track your expenses effortlessly, gain insights into your spending, and build better financial habits.
-          </p>
-          
-          <div className="flex gap-4">
-            <button className="bg-[#1570ef] text-white px-10 py-4 rounded-full font-semibold text-base hover:bg-blue-700 transition-colors font-gilroy shadow-lg">
-              Get Started
-            </button>
+            {/* Email Input + CTA */}
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+              <div className="relative w-full sm:w-auto">
+              </div>
+              <a href="/register">
+                <button className="cursor-pointer w-full sm:w-auto px-8 lg:px-10 py-3 rounded-full bg-[#1F7CFF] text-white text-base font-semibold font-poppins hover:bg-[#1A6AE0] transition-colors whitespace-nowrap">
+                  Get Started
+                </button>
+              </a>
+            </div>
           </div>
         </div>
       </div>

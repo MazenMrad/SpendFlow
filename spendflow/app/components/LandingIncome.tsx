@@ -27,9 +27,11 @@ export default function LandingIncome() {
             <p className="text-xl text-[#595e64] leading-relaxed font-gilroy mb-12">
               Track expenses effortlessly, see clear insights into your spending, and reach your savings goals faster all in one simple app.
             </p>
-            <button className="px-10 py-4 bg-[#1570ef] text-white rounded-full font-bold text-base hover:bg-blue-700 transition-colors font-gilroy shadow-lg">
-              Get Started
-            </button>
+            <a href="/register">
+              <button className="px-10 py-4 bg-[#1570ef] text-white rounded-full font-bold text-base hover:bg-blue-700 transition-colors font-gilroy shadow-lg cursor-pointer">
+                Get Started
+              </button>
+            </a>
           </div>
 
           {/* Right Chart */}
@@ -37,7 +39,9 @@ export default function LandingIncome() {
             <div className="bg-white rounded-2xl border border-[#dadada] shadow-lg p-8">
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-xl font-bold text-[#1c1f37] font-gilroy">Income vs Expenses</h3>
-                <button className="text-[#8e8e8e] text-sm font-dm-sans">April 2021 - September 2021</button>
+                <a href="">
+                  <button className="text-[#8e8e8e] text-sm font-dm-sans cursor-pointer">April 2021 - September 2021</button>
+                </a>
               </div>
 
               <div className="flex gap-6 mb-8">
@@ -55,18 +59,18 @@ export default function LandingIncome() {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={incomeExpenseData}>
                     <CartesianGrid vertical={false} stroke="#e8ecef" strokeDasharray="3 3" />
-                    <XAxis 
-                      dataKey="month" 
-                      axisLine={false} 
+                    <XAxis
+                      dataKey="month"
+                      axisLine={false}
                       tickLine={false}
                       tick={{ fill: "#8e8e8e", fontSize: 12 }}
                     />
-                    <YAxis 
-                      axisLine={false} 
+                    <YAxis
+                      axisLine={false}
                       tickLine={false}
                       tick={{ fill: "#8e8e8e", fontSize: 12 }}
                     />
-                    <Tooltip 
+                    <Tooltip
                       contentStyle={{ backgroundColor: "#f5f7fb", border: "none", borderRadius: 8 }}
                       cursor={false}
                     />

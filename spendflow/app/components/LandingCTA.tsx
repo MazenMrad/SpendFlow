@@ -8,10 +8,10 @@ export default function LandingCTA() {
           Ready to get Started ?
         </h2>
         <div className="flex justify-center gap-4">
-          <button className="px-8 py-3 text-white font-bold bg-blue-600 rounded-full hover:bg-blue-700">
+          <button className="px-8 py-3 text-white font-bold bg-blue-600 rounded-full hover:bg-blue-700 cursor-pointer">
             Join Now
           </button>
-          <button className="px-8 py-3 text-white font-bold bg-transparent border border-white rounded-full hover:bg-white hover:text-gray-900">
+          <button className="px-8 py-3 text-white font-bold bg-transparent border border-white rounded-full hover:bg-white hover:text-gray-900 cursor-pointer">
             Sign Up
           </button>
         </div>

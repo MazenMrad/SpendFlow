@@ -66,6 +66,11 @@
   --color-bg-light: #f5f7fb;
   --color-bg-card: #fafafa;
   --color-border: #dadada;
+  --color-blue-primary: #017efa;
+  --color-teal-primary: #23b899;
+  --color-red-notification: #ff4757;
+  --color-border-light: #f1f2fa;
+  --color-blue-accent: #017efa;
 
   --font-poppins: "Poppins", sans-serif;
   --font-inter: "Inter", sans-serif;

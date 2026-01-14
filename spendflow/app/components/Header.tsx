@@ -18,9 +18,9 @@ export default function Header({ title }: HeaderProps) {
           <Bell className="w-5 h-5 text-gray-600" />
           <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>
-        
+
         <div className="w-px h-10 bg-[#DADADA]"></div>
-        
+
         <div className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 rounded-lg px-2 py-1 transition-colors">
           <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
             <span className="text-white font-bold text-sm">MM</span>

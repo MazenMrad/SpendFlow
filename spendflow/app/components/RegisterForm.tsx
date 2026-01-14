@@ -33,10 +33,10 @@ export default function RegisterForm() {
       }}>
         {/* Welcome Section */}
         <div className="mb-8">
-          <p className="text-base font-normal text-[#5a5a5d] mb-2 font-gilroy">
+          <p className="text-base font-normal text-[#5a5a5d] mb-2 font-gilroy-medium">
             Welcome back
           </p>
-          <h1 className="text-2xl font-semibold text-[#101828] font-gilroy">
+          <h1 className="text-2xl font-semibold text-[#101828] font-gilroy-medium ">
             Create an account
           </h1>
         </div>
@@ -100,7 +100,7 @@ export default function RegisterForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600  "
               >
                 <EyeIcon className="w-6 h-6" />
               </button>
@@ -111,7 +111,7 @@ export default function RegisterForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#1570ef] text-white text-base font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors font-gilroy disabled:opacity-50"
+            className="w-full bg-[#1570ef] text-white text-base font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors font-gilroy disabled:opacity-50 cursor-pointer"
           >
             {loading ? "Creating account..." : "Create account"}
           </button>
@@ -119,7 +119,7 @@ export default function RegisterForm() {
           {/* Continue with Google Button */}
           <button
             type="button"
-            className="w-full flex items-center justify-center gap-3 bg-[#d1e9ff] text-[#1570ef] text-base font-semibold py-3 rounded-lg hover:bg-blue-100 transition-colors font-gilroy"
+            className="w-full flex items-center justify-center gap-3 bg-[#d1e9ff] text-[#1570ef] text-base font-semibold py-3 rounded-lg hover:bg-blue-100 transition-colors font-gilroy cursor-pointer"
           >
             <GoogleIcon className="w-5 h-5" />
             Continue with Google

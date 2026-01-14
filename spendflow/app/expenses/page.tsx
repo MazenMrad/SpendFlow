@@ -94,16 +94,16 @@ export default function Expenses() {
 
     return (
         <Layout pageTitle="Expenses">
-            <div className="px-4 sm:px-8 lg:px-14 py-8 lg:py-14">
-                <div className="max-w-[1076px] mx-auto space-y-6">
+            <div className="px-4 sm:px-8 lg:px-14 py-6 lg:py-14">
+                <div className="max-w-[1800px] mx-auto space-y-6">
                     {/* Filter and Stats Bar */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white rounded-[20px] p-6 shadow-md">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                             <div className="flex items-center gap-2">
-                                <span className="text-sm font-semibold text-gray-600 font-inter">Filter:</span>
+                                <span className="text-base text-gray-600 font-gilroy-bold">Filter:</span>
                                 <div className="relative">
-                                    <button className="flex items-center gap-2 px-4 py-2 bg-[#F5F6FB] rounded-lg border border-[#E3E8F1] hover:bg-[#E8EBFA] transition-colors text-sm font-inter">
-                                        <span className="text-[#1C1F37] font-semibold">
+                                    <button className="flex items-center gap-2 px-4 py-2 bg-[#F5F6FB] rounded-lg border border-[#E3E8F1] hover:bg-[#E8EBFA] transition-colors text-base font-gilroy-regular">
+                                        <span className="text-[#1C1F37] font-gilroy-bold">
                                             {filterStatus === "all" ? "All" : filterStatus === "completed" ? "Completed" : "Pending"}
                                         </span>
                                         <ChevronDown size={16} />
@@ -112,10 +112,10 @@ export default function Expenses() {
                             </div>
 
                             <div className="flex items-center gap-2">
-                                <span className="text-sm font-semibold text-gray-600 font-inter">Sort:</span>
+                                <span className="text-base text-gray-600 font-gilroy-bold">Sort:</span>
                                 <div className="relative">
-                                    <button className="flex items-center gap-2 px-4 py-2 bg-[#F5F6FB] rounded-lg border border-[#E3E8F1] hover:bg-[#E8EBFA] transition-colors text-sm font-inter">
-                                        <span className="text-[#1C1F37] font-semibold">
+                                    <button className="flex items-center gap-2 px-4 py-2 bg-[#F5F6FB] rounded-lg border border-[#E3E8F1] hover:bg-[#E8EBFA] transition-colors text-base font-gilroy-regular">
+                                        <span className="text-[#1C1F37] font-gilroy-bold">
                                             {sortBy === "date" ? "Date" : "Amount"}
                                         </span>
                                         <ChevronDown size={16} />
@@ -126,14 +126,14 @@ export default function Expenses() {
 
                         <div className="flex items-center gap-4">
                             <div className="text-right">
-                                <p className="text-xs text-gray-500 font-inter">Total</p>
-                                <p className="text-xl sm:text-2xl font-bold text-spendflow-blue font-inter">
+                                <p className="text-sm text-gray-500 font-gilroy-regular">Total</p>
+                                <p className="text-2xl sm:text-3xl text-spendflow-blue font-gilroy-bold">
                                     TND {totalAmount.toFixed(2)}
                                 </p>
                             </div>
                             <button className="flex items-center gap-2 px-4 py-2 bg-spendflow-blue hover:bg-spendflow-blue/90 text-white rounded-lg transition-colors">
                                 <Download size={16} />
-                                <span className="text-sm font-semibold font-inter hidden sm:inline">Export</span>
+                                <span className="text-base font-gilroy-bold hidden sm:inline">Export</span>
                             </button>
                         </div>
                     </div>
@@ -144,7 +144,7 @@ export default function Expenses() {
                         <div className="lg:hidden divide-y divide-[#E3E8F1]">
                             {sortedExpenses.length === 0 ? (
                                 <div className="p-6 text-center">
-                                    <p className="text-gray-500 font-inter">No expenses found</p>
+                                    <p className="text-gray-500 font-gilroy-regular">No expenses found</p>
                                 </div>
                             ) : (
                                 sortedExpenses.map((expense) => {
@@ -154,15 +154,15 @@ export default function Expenses() {
                                         <div key={expense.id} className="p-4 sm:p-6">
                                             <div className="flex items-start justify-between gap-4 mb-3">
                                                 <div className="flex-1">
-                                                    <p className="font-semibold text-[#1C1F37] font-inter">
+                                                    <p className="text-lg text-[#1C1F37] font-gilroy-bold">
                                                         {expense.description}
                                                     </p>
-                                                    <p className="text-xs text-gray-500 font-inter mt-1">
+                                                    <p className="text-sm text-gray-500 font-gilroy-regular mt-1">
                                                         {expense.date}
                                                     </p>
                                                 </div>
                                                 <span
-                                                    className="text-sm font-bold px-3 py-1 rounded-full whitespace-nowrap"
+                                                    className="text-base font-gilroy-bold px-3 py-1 rounded-full whitespace-nowrap"
                                                     style={{ backgroundColor: colors.bg, color: colors.text }}
                                                 >
                                                     {expense.category}
@@ -170,14 +170,14 @@ export default function Expenses() {
                                             </div>
                                             <div className="flex items-center justify-between">
                                                 <span
-                                                    className={`text-xs px-2 py-1 rounded-full font-semibold font-inter ${expense.status === "completed"
+                                                    className={`text-sm px-3 py-1 rounded-full font-gilroy-bold ${expense.status === "completed"
                                                         ? "bg-green-100 text-green-700"
                                                         : "bg-yellow-100 text-yellow-700"
                                                         }`}
                                                 >
                                                     {expense.status === "completed" ? "Completed" : "Pending"}
                                                 </span>
-                                                <span className="font-bold text-[#1C1F37] font-inter">
+                                                <span className="text-xl text-[#1C1F37] font-gilroy-bold">
                                                     TND {expense.amount.toFixed(2)}
                                                 </span>
                                             </div>
@@ -192,19 +192,19 @@ export default function Expenses() {
                             <table className="w-full">
                                 <thead className="bg-[#F5F6FB] border-b border-[#E3E8F1]">
                                     <tr>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-[#1C1F37] font-inter">
+                                        <th className="px-6 py-6 text-left text-lg text-[#1C1F37] font-gilroy-bold">
                                             Date
                                         </th>
-                                        <th className="px-6 py-4 text-left text-sm font-bold text-[#1C1F37] font-inter">
+                                        <th className="px-6 py-6 text-left text-lg text-[#1C1F37] font-gilroy-bold">
                                             Description
                                         </th>
-                                        <th className="px-6 py-4 text-center text-sm font-bold text-[#1C1F37] font-inter">
+                                        <th className="px-6 py-6 text-center text-lg text-[#1C1F37] font-gilroy-bold">
                                             Category
                                         </th>
-                                        <th className="px-6 py-4 text-center text-sm font-bold text-[#1C1F37] font-inter">
+                                        <th className="px-6 py-6 text-center text-lg text-[#1C1F37] font-gilroy-bold">
                                             Status
                                         </th>
-                                        <th className="px-6 py-4 text-right text-sm font-bold text-[#1C1F37] font-inter">
+                                        <th className="px-6 py-6 text-right text-lg text-[#1C1F37] font-gilroy-bold">
                                             Amount
                                         </th>
                                     </tr>
@@ -213,7 +213,7 @@ export default function Expenses() {
                                     {sortedExpenses.length === 0 ? (
                                         <tr>
                                             <td colSpan={5} className="px-6 py-8 text-center">
-                                                <p className="text-gray-500 font-inter">No expenses found</p>
+                                                <p className="text-lg text-gray-500 font-gilroy-regular">No expenses found</p>
                                             </td>
                                         </tr>
                                     ) : (
@@ -225,15 +225,15 @@ export default function Expenses() {
                                                     key={expense.id}
                                                     className="hover:bg-[#F5F6FB] transition-colors"
                                                 >
-                                                    <td className="px-6 py-4 text-sm text-gray-600 font-inter">
+                                                    <td className="px-6 py-6 text-base text-gray-600 font-gilroy-regular">
                                                         {expense.date}
                                                     </td>
-                                                    <td className="px-6 py-4 text-sm font-semibold text-[#1C1F37] font-inter">
+                                                    <td className="px-6 py-6 text-lg text-[#1C1F37] font-gilroy-medium">
                                                         {expense.description}
                                                     </td>
-                                                    <td className="px-6 py-4 text-center">
+                                                    <td className="px-6 py-6 text-center">
                                                         <span
-                                                            className="text-xs font-bold px-3 py-1 rounded-full inline-block"
+                                                            className="text-sm font-gilroy-bold px-3 py-1 rounded-full inline-block"
                                                             style={{
                                                                 backgroundColor: colors.bg,
                                                                 color: colors.text,
@@ -242,9 +242,9 @@ export default function Expenses() {
                                                             {expense.category}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-4 text-center">
+                                                    <td className="px-6 py-6 text-center">
                                                         <span
-                                                            className={`text-xs px-3 py-1 rounded-full font-semibold font-inter ${expense.status === "completed"
+                                                            className={`text-sm px-3 py-1 rounded-full font-gilroy-bold ${expense.status === "completed"
                                                                 ? "bg-green-100 text-green-700"
                                                                 : "bg-yellow-100 text-yellow-700"
                                                                 }`}
@@ -254,7 +254,7 @@ export default function Expenses() {
                                                                 : "Pending"}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-4 text-right font-bold text-[#1C1F37] font-inter">
+                                                    <td className="px-6 py-6 text-right text-lg text-[#1C1F37] font-gilroy-bold">
                                                         TND {expense.amount.toFixed(2)}
                                                     </td>
                                                 </tr>
