@@ -59,11 +59,11 @@ export default function MonthlySpendingChart() {
           <XAxis
             dataKey="month"
             stroke="#8e8e8e"
-            style={{ fontSize: "14px" }}
+            style={{ fontSize: "14px", fontFamily: "Gilroy" }}
           />
           <YAxis
             stroke="#8e8e8e"
-            style={{ fontSize: "12px" }}
+            style={{ fontSize: "12px", fontFamily: "Gilroy" }}
             domain={[0, 4000]}
             ticks={[0, 1000, 2000, 3000, 4000]}
           />
@@ -72,6 +72,7 @@ export default function MonthlySpendingChart() {
               backgroundColor: "#f5f7fb",
               border: "1px solid #dadada",
               borderRadius: "6px",
+              fontFamily: "Gilroy"
             }}
             formatter={(value) => `${value}`}
           />
