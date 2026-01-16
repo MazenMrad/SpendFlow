@@ -5,23 +5,25 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  engineType      = "library"
 }
 
 datasource db {
   provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 model User {
   id         String     @id @default(auto()) @map("_id") @db.ObjectId
   email      String     @unique
   name       String?
-  password   String 
+  password   String
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   expenses   Expense[] // Relation to Expense model (1 User -> Many Expenses)
   categories Category[] // Relation to Category model (1 User -> Many Categories)
-  budgetGoal Int?       // Monthly budget in TND (e.g., 2500)
+  budgetGoal Int? // Monthly budget in TND (e.g., 2500)
   currency   String     @default("TND") // Future: USD/EUR
 
   @@map("users")
@@ -39,17 +41,17 @@ model Category {
 }
 
 model Expense {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
   amount        Float
   description   String?
   date          DateTime
-  categoryId    String    @db.ObjectId
-  category      Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  paymentMethod String    @default("CASH")
-  userId        String    @db.ObjectId
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  categoryId    String   @db.ObjectId
+  category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  paymentMethod String   @default("CASH")
+  userId        String   @db.ObjectId
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@map("expenses")
 }

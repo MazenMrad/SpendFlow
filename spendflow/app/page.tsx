@@ -13,7 +13,7 @@ export default function LandingPage() {
       {/* Header */}
       <LandingHeader />
 
-      {/* Hero Section */}
+      {/*Hero Section */}
       <LandingHero />
 
       {/* Features Section */}
