@@ -1,12 +1,23 @@
 export default function UpcomingBills() {
-  const bills = [
-    { id: 1, name: "Car Loan", date: "20 January 2026", status: "upcoming", color: "#51CBFF" },
-    { id: 2, name: "Loan", date: "Paid", status: "paid", color: "#23B899" },
-    { id: 3, name: "Rent", date: "14 January 2026", status: "upcoming", color: "#51CBFF" },
-  ];
+  const bills: { id: number; name: string; status: string; color: string; date: string }[] = [];
 
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const dates = [10, 11, 12, 13, 14, 15, 16];
+
+  const today = new Date();
+  const currentDay = today.getDay();
+  const currentDate = today.getDate();
+
+  const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay;
+
+  const dates = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(today);
+    date.setDate(currentDate + mondayOffset + i);
+    return date.getDate();
+  });
+
+  // Find which index is today
+  const todayIndex = dates.findIndex(date => date === currentDate);
+
 
   return (
     <div className="bg-white rounded-lg shadow-[0_5px_10px_0_#F1F2FA] p-5">
@@ -55,7 +66,7 @@ export default function UpcomingBills() {
           >
             <path
               d="M10.061 19.061L17.121 12L10.061 4.93896L7.93896 7.06096L12.879 12L7.93896 16.939L10.061 19.061Z"
-              fill="#017EFA"
+              fill="#5da6f0ff"
             />
           </svg>
         </button>
@@ -79,21 +90,27 @@ export default function UpcomingBills() {
             </div>
 
             {/* Date Cells */}
-            {dates.map((date, i) => (
-              <div
-                key={date}
-                className={`text-center py-5 border-r border-b border-[#ECEDF3] last:border-r-0 ${i === 1 ? "bg-[#F0F2F8]" : ""
-                  } ${i === 4 ? "bg-[#017EFA]/[0.27]" : ""} ${i === 6 ? "bg-[#F0F2F8]" : ""
-                  }`}
-              >
-                <span
-                  className={`font-gilroy-bold text-sm ${i === 4 ? "text-[#017EFA]" : "text-[#017EFA]"
+            {dates.map((date, i) => {
+              const isToday = i === todayIndex;
+              const isWeekend = i === 5 || i === 6; // Sat or Sun
+
+              return (
+                <div
+                  key={`${date}-${i}`}
+                  className={`text-center py-5 border-r border-b border-[#ECEDF3] last:border-r-0 ${isToday
+                    ? "bg-[#017EFA] shadow-lg"
+                    : ""
                     }`}
                 >
-                  {date}
-                </span>
-              </div>
-            ))}
+                  <span
+                    className={`font-gilroy-bold text-sm ${isToday ? "text-white" : "text-[#017EFA]"
+                      }`}
+                  >
+                    {date}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
 

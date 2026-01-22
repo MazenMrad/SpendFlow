@@ -42,15 +42,13 @@ export default function Sidebar() {
             <Link
               key={item.path}
               href={item.path}
-              className={`sidebar-item transition-all ${isActive
-                ? "sidebar-item-active bg-[#0A194E] text-[#CCD2E3]"
-                : "sidebar-item-inactive text-[#CCD2E3]"
-                } mb-2 rounded-lg`}
+              className={`sidebar-item transition-all rounded-lg mb-2 ${isActive
+                  ? "bg-white/10 text-white"
+                  : "text-[#CCD2E3] hover:bg-white/10 hover:text-white"
+                }`}
             >
-              <Icon className="w-6 h-6" />
+              <Icon className={`w-6 h-6 transition-colors ${isActive ? "text-white" : "text-[#CCD2E3]"}`} />
               <span className="text-lg font-gilroy-regular">{item.name}</span>
-
-
             </Link>
           );
         })}
@@ -60,16 +58,13 @@ export default function Sidebar() {
       <div className="px-2 pb-8">
         <Link
           href="/settings"
-          className={`sidebar-item transition-all ${pathname === "/settings"
-            ? "sidebar-item-active bg-[#0A194E] text-[#CCD2E3]"
-            : "sidebar-item-inactive text-[#CCD2E3]"
-            } rounded-lg`}
+          className={`sidebar-item transition-all rounded-lg ${pathname === "/settings"
+              ? "bg-white/10 text-white"
+              : "text-[#CCD2E3] hover:bg-white/10 hover:text-white"
+            }`}
         >
-          <SettingsIcon className="w-6 h-6" />
+          <SettingsIcon className={`w-6 h-6 transition-colors ${pathname === "/settings" ? "text-white" : "text-[#CCD2E3]"}`} />
           <span className="text-lg font-gilroy-regular">Settings</span>
-
-
-
         </Link>
       </div>
     </div>

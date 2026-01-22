@@ -1,19 +1,65 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
+import { useSession } from "next-auth/react";
+import { changePassword } from '../actions/auth';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function Account() {
+    const { data: session } = useSession();
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
-        fullName: 'Mazen Mrad',
-        email: 'mazen.mrad@email.com',
+        fullName: '',
+        email: '',
     });
+    const [passwordData, setPasswordData] = useState({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    });
+    const [isChangingPassword, setIsChangingPassword] = useState(false);
+    const [alertConfig, setAlertConfig] = useState<{
+        open: boolean;
+        title: string;
+        description: string;
+        type: 'success' | 'error';
+    }>({
+        open: false,
+        title: '',
+        description: '',
+        type: 'success'
+    });
+
+    useEffect(() => {
+        if (session?.user) {
+            setFormData({
+                fullName: session.user.name || '',
+                email: session.user.email || '',
+            });
+        }
+    }, [session]);
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setPasswordData(prev => ({
             ...prev,
             [name]: value
         }));
@@ -33,7 +79,9 @@ export default function Account() {
                         {/* Avatar */}
                         <div className="flex-shrink-0">
                             <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-primary to-teal-primary flex items-center justify-center">
-                                <span className="text-white font-gilroy-bold text-2xl">MR</span>
+                                <span className="text-white font-gilroy-bold text-2xl">
+                                    {formData.fullName ? formData.fullName.slice(0, 2).toUpperCase() : 'MR'}
+                                </span>
                             </div>
                         </div>
                         {/* Profile Info */}
@@ -103,18 +151,97 @@ export default function Account() {
 
                         {/* Password */}
                         <div className="border-t border-border-light pt-5">
-                            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                                <div>
-                                    <h4 className="text-text-primary font-gilroy-bold text-base mb-1">
-                                        Password
-                                    </h4>
-                                    <p className="text-text-secondary font-gilroy-regular text-sm">
-                                        Last changed 3 months ago
-                                    </p>
+                            <div className="flex flex-col gap-4">
+                                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                                    <div>
+                                        <h4 className="text-text-primary font-gilroy-bold text-base mb-1">
+                                            Password
+                                        </h4>
+                                        <p className="text-text-secondary font-gilroy-regular text-sm">
+                                            Manage your password
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={() => setIsChangingPassword(!isChangingPassword)}
+                                        className="mt-3 md:mt-0 px-6 py-2 border border-border-light hover:bg-gray-50 text-text-primary font-gilroy-bold cursor-pointer text-sm font-medium rounded-lg transition-colors"
+                                    >
+                                        {isChangingPassword ? "Cancel" : "Change Password"}
+                                    </button>
                                 </div>
-                                <button className="mt-3 md:mt-0 px-6 py-2 border border-border-light hover:bg-gray-50 text-text-primary font-gilroy-bold cursor-pointer text-sm font-medium rounded-lg transition-colors">
-                                    Change Password
-                                </button>
+
+                                {isChangingPassword && (
+                                    <div className="space-y-4 pt-4">
+                                        <div className="flex flex-col">
+                                            <label className="text-text-primary font-gilroy-bold text-sm mb-2">Current Password</label>
+                                            <input
+                                                type="password"
+                                                name="currentPassword"
+                                                value={passwordData.currentPassword}
+                                                onChange={handlePasswordChange}
+                                                className="h-10 border border-border-light rounded-lg px-3 mb-2"
+                                            />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <label className="text-text-primary font-gilroy-bold text-sm mb-2">New Password</label>
+                                            <input
+                                                type="password"
+                                                name="newPassword"
+                                                value={passwordData.newPassword}
+                                                onChange={handlePasswordChange}
+                                                className="h-10 border border-border-light rounded-lg px-3 mb-2"
+                                            />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <label className="text-text-primary font-gilroy-bold text-sm mb-2">Confirm Password</label>
+                                            <input
+                                                type="password"
+                                                name="confirmPassword"
+                                                value={passwordData.confirmPassword}
+                                                onChange={handlePasswordChange}
+                                                className="h-10 border border-border-light rounded-lg px-3"
+                                            />
+                                        </div>
+                                        <div className="flex justify-end">
+                                            <button
+                                                onClick={async () => {
+                                                    if (passwordData.newPassword !== passwordData.confirmPassword) {
+                                                        setAlertConfig({
+                                                            open: true,
+                                                            title: 'Wait!',
+                                                            description: 'Passwords do not match. Please check and try again.',
+                                                            type: 'error'
+                                                        });
+                                                        return;
+                                                    }
+                                                    const fd = new FormData();
+                                                    fd.append("currentPassword", passwordData.currentPassword);
+                                                    fd.append("newPassword", passwordData.newPassword);
+                                                    const res = await changePassword(fd);
+                                                    if (res.success) {
+                                                        setAlertConfig({
+                                                            open: true,
+                                                            title: 'Success!',
+                                                            description: 'Your password has been changed successfully.',
+                                                            type: 'success'
+                                                        });
+                                                        setIsChangingPassword(false);
+                                                        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                                                    } else {
+                                                        setAlertConfig({
+                                                            open: true,
+                                                            title: 'Error',
+                                                            description: res.error || "Failed to change password. Please try again.",
+                                                            type: 'error'
+                                                        });
+                                                    }
+                                                }}
+                                                className="px-6 py-2 bg-[#017EFA] text-white rounded-lg font-gilroy-bold"
+                                            >
+                                                Update Password
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -139,6 +266,24 @@ export default function Account() {
                     </button>
                 </div>
             </div>
+
+            <AlertDialog open={alertConfig.open} onOpenChange={(open) => setAlertConfig(prev => ({ ...prev, open }))}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className={alertConfig.type === 'error' ? 'text-red-600' : 'text-green-600'}>
+                            {alertConfig.title}
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {alertConfig.description}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction onClick={() => setAlertConfig(prev => ({ ...prev, open: false }))}>
+                            Continue
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </Layout>
     );
 }

@@ -1,7 +1,20 @@
-export default function RecentTransactions() {
-  const transactions = [
-    { id: 1, type: "Online Purchase", amount: "50 TND", category: "Inscription" },
-    { id: 2, type: "Online Purchase", amount: "70 TND", category: "Inscription" },
+interface Transaction {
+  id: string;
+  type: string;
+  amount: string;
+  category: string;
+  description: string;
+  date: string;
+}
+
+interface RecentTransactionsProps {
+  transactions?: Transaction[];
+}
+
+export default function RecentTransactions({ transactions: propTransactions }: RecentTransactionsProps) {
+  const displayTransactions = propTransactions || [
+    { id: "1", type: "Online Purchase", amount: "50 TND", category: "Inscription", description: "Sample", date: "Jan 13, 2026" },
+    { id: "2", type: "Online Purchase", amount: "70 TND", category: "Inscription", description: "Sample", date: "Jan 12, 2026" },
   ];
 
   return (
@@ -39,7 +52,7 @@ export default function RecentTransactions() {
 
       {/* Transactions List */}
       <div className="space-y-4">
-        {transactions.map((transaction) => (
+        {displayTransactions.map((transaction) => (
           <div
             key={transaction.id}
             className="bg-[#FAFAFA] rounded-[27px] p-4"
@@ -67,10 +80,10 @@ export default function RecentTransactions() {
               {/* Transaction Details */}
               <div className="flex-1 min-w-0">
                 <div className="font-gilroy-medium text-base text-[#1C1F37] mb-1">
-                  {transaction.type}
+                  {transaction.description}
                 </div>
                 <div className="font-gilroy-medium text-xs text-[#1C1F37]/30">
-                  {transaction.category}
+                  {transaction.type} • {transaction.date}
                 </div>
               </div>
 

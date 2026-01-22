@@ -1,35 +1,28 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Sidebar from "@/app/components/Sidebar";
 import Header from "@/app/components/Header";
-import MonthlySpendingChart from "@/app/components/MonthlSpendingChart";
+import MonthlySpendingChart from "@/app/components/MonthlySpendingChart";
 import SpendingByCategoryChart from "@/app/components/SpendingByCategoryChart";
 import MetricsCard from "@/app/components/MetricsCard";
 import UpcomingBills from "@/app/components/UpcomingBills";
 import RecentTransactions from "@/app/components/RecentTransactions";
-import SuccessIcon from "@/app/icons/success-icon.svg";
-import { getServerSession } from "next-auth";
-//import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import SpendingTrends from "@/app/components/SpendingTrends";
+import { getDashboardData } from "@/app/actions/expenses";
 
-/** 
 export default function DashboardPage() {
-  const session = async () => await getServerSession(authOptions);
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Note: Since this is a server component, we can use getServerSession directly in the component body
-  // However, Next.js 13+ App Router often handles this via middleware or inside the component as await.
-
-  return (
-    <DashboardContent />
-  );
-}
-
-async function DashboardContent() {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    redirect("/login");
-  }
-    */
-export default function DashboardPage() {
+  useEffect(() => {
+    async function fetchData() {
+      const result = await getDashboardData();
+      setData(result);
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
 
   return (
     <div className="flex">
@@ -43,37 +36,37 @@ export default function DashboardPage() {
 
         {/* Content Area */}
         <div className="mt-8 px-8 pb-12 space-y-8">
-          {/* Top Section: Monthly Spending Overview & Category Analysis */}
+          {/*  Monthly Spending Overview & Category Analysis */}
           <div className="grid grid-cols-3 gap-8">
             {/* Left side: Chart and Metrics (spans 2 columns) */}
             <div className="col-span-2 space-y-8">
               {/* Monthly Spending Chart */}
-              <MonthlySpendingChart />
+              <MonthlySpendingChart
+                monthlyData={data?.monthlyTrend}
+                weeklyData={data?.weeklyTrend}
+              />
 
               {/* Metrics Row (Horizontal) */}
               <div className="grid grid-cols-3 gap-6">
                 <MetricsCard
                   label="Monthly Spending"
-                  amount="250 TND"
-                  change="8%"
-                  changeSign="down"
+                  amount={data?.metrics?.monthlySpending}
                 />
                 <MetricsCard
                   label="Remaining Budget"
-                  amount="1,250 TND"
-                  change="12%"
+                  amount={data?.metrics?.remainingBudget}
                   changeSign="up"
                 />
                 <MetricsCard
-                  label="Groceries & Dining"
-                  amount="300 TND"
+                  label={data?.metrics?.topCategory}
+                  amount={data?.metrics?.topCategoryAmount}
                 />
               </div>
             </div>
 
-            {/* Right side: Spending by Category */}
-            <div>
-              <SpendingByCategoryChart />
+            {/* Right side: Spending by Category & Trends */}
+            <div className="space-y-8">
+              <SpendingByCategoryChart categories={data?.categories} />
             </div>
           </div>
 
@@ -84,7 +77,7 @@ export default function DashboardPage() {
 
           {/* Bottom Section: Recent Transactions */}
           <div>
-            <RecentTransactions />
+            <RecentTransactions transactions={data?.recentTransactions} />
           </div>
         </div>
       </div>

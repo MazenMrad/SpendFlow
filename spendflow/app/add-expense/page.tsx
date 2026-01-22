@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import Layout from '../components/Layout';
+import { addExpense, getUserCategories } from '../actions/expenses';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function AddExpense() {
   const [formData, setFormData] = useState({
@@ -11,6 +14,26 @@ export default function AddExpense() {
     type: '',
     description: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [categories, setCategories] = useState<{ id: string, name: string }[]>([]);
+  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function loadCategories() {
+      const userCats = await getUserCategories();
+      // Define defaults
+      const defaults = ["Transport", "Food", "Entertainment", "Shopping"];
+
+      // Merge unique categories
+      const uniqueCats = new Map();
+      defaults.forEach(name => uniqueCats.set(name, { id: name, name })); // Use name as ID for defaults temporarily if needed or just handle strings
+      userCats.forEach(cat => uniqueCats.set(cat.name, cat));
+
+      setCategories(Array.from(uniqueCats.values()));
+    }
+    loadCategories();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -20,10 +43,34 @@ export default function AddExpense() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Handle form submission here
+    setIsLoading(true);
+    setMessage(null);
+
+    const formDataObj = new FormData();
+    formDataObj.append('date', formData.date);
+    formDataObj.append('amount', formData.amount);
+    formDataObj.append('category', formData.category);
+    formDataObj.append('type', formData.type);
+    formDataObj.append('description', formData.description);
+
+    const result = await addExpense(formDataObj);
+
+    setIsLoading(false);
+
+    if (result.error) {
+      setMessage({ type: 'error', text: result.error });
+    } else {
+      setMessage({ type: 'success', text: result.message || 'Expense added successfully!' });
+      setFormData({
+        date: '',
+        amount: '',
+        category: '',
+        type: '',
+        description: '',
+      });
+    }
   };
 
   return (
@@ -82,10 +129,11 @@ export default function AddExpense() {
                     className="w-full h-10 border border-border-light rounded-lg px-3 text-text-primary font-gilroy focus:outline-none focus:ring-2 focus:ring-blue-accent bg-white"
                   >
                     <option value="" disabled>Select category</option>
-                    <option value="Transport">Transport</option>
-                    <option value="Food">Food</option>
-                    <option value="Entertainment">Entertainment</option>
-                    <option value="Shopping">Shopping</option>
+                    {categories.map((cat) => (
+                      <option key={cat.name} value={cat.name}>
+                        {cat.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -104,6 +152,7 @@ export default function AddExpense() {
                     <option value="" disabled>Select type</option>
                     <option value="Cash">Cash</option>
                     <option value="Card">Card</option>
+                    <option value="Check">Check</option>
                   </select>
                 </div>
               </div>
@@ -124,13 +173,24 @@ export default function AddExpense() {
                 />
               </div>
 
+              {/* Success/Error Message */}
+              {message && (
+                <div className={`mt-6 p-4 rounded-lg ${message.type === 'success'
+                  ? 'bg-green-100 text-green-800 border border-green-300'
+                  : 'bg-red-100 text-red-800 border border-red-300'
+                  }`}>
+                  <p className="font-gilroy-medium">{message.text}</p>
+                </div>
+              )}
+
               {/* Submit Button */}
               <div className="flex justify-end mt-6 lg:mt-[48px]">
                 <button
                   type="submit"
-                  className="w-[150px] h-12 bg-teal hover:bg-teal/90 text-white font-gilroy-bold text-base rounded-[50px] transition-colors cursor-pointer"
+                  disabled={isLoading}
+                  className="w-[150px] h-12 bg-teal hover:bg-teal/90 text-white font-gilroy-bold text-base rounded-[50px] transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Add
+                  {isLoading ? 'Adding...' : 'Add'}
                 </button>
               </div>
             </form>

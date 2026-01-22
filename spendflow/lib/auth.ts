@@ -4,7 +4,13 @@ import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
 
 
+
+
+const secretFingerprint = process.env.NEXTAUTH_SECRET ? process.env.NEXTAUTH_SECRET.substring(0, 5) + "..." : "UNDEFINED";
+console.log("DEBUG: lib/auth.ts - NEXTAUTH_SECRET fingerprint:", secretFingerprint);
+
 export const authOptions: NextAuthOptions = {
+    secret: process.env.NEXTAUTH_SECRET,
     session: {
         strategy: "jwt",
     },
