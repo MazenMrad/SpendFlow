@@ -72,7 +72,7 @@ export default function DashboardPage() {
 
           {/* Middle Section: Upcoming Bills */}
           <div>
-            <UpcomingBills />
+            <UpcomingBills bills={data?.upcomingBills} />
           </div>
 
           {/* Bottom Section: Recent Transactions */}

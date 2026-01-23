@@ -1,10 +1,10 @@
 "use client"
 
-import { Download } from "lucide-react";
+import { Download, X } from "lucide-react";
 import { useState } from "react";
 import Layout from "../components/Layout";
 import { useSession, signOut } from "next-auth/react";
-import { updateBudgetGoal, createCategory, getDashboardData, getUserCategories } from "../actions/expenses";
+import { updateBudgetGoal, createCategory, getDashboardData, getUserCategories, getExpenses, deleteCategory } from "../actions/expenses";
 import { useEffect, useRef } from "react";
 import {
     AlertDialog,
@@ -31,7 +31,7 @@ export default function Settings() {
     const [language, setLanguage] = useState("");
     const [budgetGoal, setBudgetGoal] = useState("");
     const [categoryName, setCategoryName] = useState("");
-    const [categories, setCategories] = useState<{ id: string, name: string, color?: string }[]>([]);
+    const [categories, setCategories] = useState<{ id: string, name: string, color?: string | null }[]>([]);
     const [alertConfig, setAlertConfig] = useState<{
         open: boolean;
         title: string;
@@ -92,6 +92,56 @@ export default function Settings() {
                 type: 'error'
             });
         }
+    };
+
+    const handleDeleteCategory = async (categoryId: string) => {
+        const res = await deleteCategory(categoryId);
+        if (res.success) {
+            const cats = await getUserCategories();
+            setCategories(cats);
+        } else {
+            setAlertConfig({
+                open: true,
+                title: 'Error',
+                description: res.error || 'Failed to delete category.',
+                type: 'error'
+            });
+        }
+    };
+
+    const handleExportCSV = async () => {
+        const expenses = await getExpenses();
+        if (!expenses || expenses.length === 0) {
+            setAlertConfig({
+                open: true,
+                title: 'No Data',
+                description: 'There are no expenses to export.',
+                type: 'error'
+            });
+            return;
+        }
+
+        const headers = ["Date", "Category", "Description", "Amount", "Status"];
+        const csvContent = [
+            headers.join(","),
+            ...expenses.map(exp => [
+                `"${exp.date}"`,
+                `"${exp.category}"`,
+                `"${exp.description.replace(/"/g, '""')}"`,
+                exp.amount,
+                `"${exp.status}"`
+            ].join(","))
+        ].join("\n");
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `expenses_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     return (
@@ -193,16 +243,22 @@ export default function Settings() {
                                     {/* Categories Badges */}
                                     <div className="flex flex-wrap gap-2 mt-3">
                                         {categories.map((cat) => (
-                                            <span
+                                            <div
                                                 key={cat.id}
-                                                className="px-3 py-1 rounded-full text-sm font-gilroy-bold"
+                                                className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-gilroy-bold transition-all hover:pr-2"
                                                 style={{
                                                     backgroundColor: cat.color || "#F0E8FF",
                                                     color: cat.color ? "#1C1F37" : "#6B5BF7"
                                                 }}
                                             >
-                                                {cat.name}
-                                            </span>
+                                                <span>{cat.name}</span>
+                                                <button
+                                                    onClick={() => handleDeleteCategory(cat.id)}
+                                                    className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-black/10 hover:bg-black/20 transition-colors cursor-pointer"
+                                                >
+                                                    <X className="w-2.5 h-2.5" />
+                                                </button>
+                                            </div>
                                         ))}
                                     </div>
                                 </div>
@@ -224,7 +280,10 @@ export default function Settings() {
                             <span className="text-[11px] text-black/[0.46] font-bold font-inter">
                                 Export Data
                             </span>
-                            <button className="w-[58px] h-[23px] bg-[#F2F4FD] hover:bg-[#E8EBFA] rounded-md flex items-center justify-center gap-1 transition-colors">
+                            <button
+                                onClick={handleExportCSV}
+                                className="w-[58px] h-[23px] bg-[#F2F4FD] hover:bg-[#E8EBFA] rounded-md flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                            >
                                 <Download className="w-[10px] h-[11px] text-[#1C1F37]" strokeWidth={3} />
                                 <span className="text-[11px] text-[#1C1F37] font-bold font-inter">
                                     CSV

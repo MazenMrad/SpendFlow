@@ -155,6 +155,31 @@ export async function getUserCategories() {
     }
 }
 
+export async function deleteCategory(categoryId: string) {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session?.user) return { error: "Unauthorized" };
+        const userId = (session.user as any).id;
+
+        const category = await prisma.category.findUnique({
+            where: { id: categoryId }
+        });
+
+        if (!category || category.userId !== userId) {
+            return { error: "Category not found or unauthorized" };
+        }
+
+        await prisma.category.delete({
+            where: { id: categoryId }
+        });
+
+        return { success: true, message: "Category deleted successfully" };
+    } catch (error) {
+        console.error("DELETE CATEGORY ERROR:", error);
+        return { error: "Failed to delete category" };
+    }
+}
+
 export async function getDashboardData() {
     try {
         const session = await getServerSession(authOptions);
@@ -290,6 +315,27 @@ export async function getDashboardData() {
             });
         }
 
+        const upcomingRaw = await prisma.expense.findMany({
+            where: {
+                userId,
+                date: { gte: now }
+            },
+            include: { category: true },
+            orderBy: { date: 'asc' },
+            take: 10
+        });
+
+        const upcomingBills = upcomingRaw.map(r => ({
+            id: r.id,
+            name: r.description || r.category.name,
+            amount: `${r.amount.toFixed(2)} TND`,
+            category: r.category.name,
+            color: r.category.color || "#017EFA",
+            date: r.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+            fullDate: r.date,
+            status: r.status
+        }));
+
         return {
             metrics: {
                 monthlySpending: `${totalMonthly.toFixed(2)} TND`,
@@ -300,7 +346,8 @@ export async function getDashboardData() {
             monthlyTrend,
             weeklyTrend,
             categories: categoryList,
-            recentTransactions
+            recentTransactions,
+            upcomingBills
         };
     } catch (error) {
         console.error("Dashboard data error:", error);
@@ -401,5 +448,102 @@ export async function deleteExpense(expenseId: string) {
     } catch (error) {
         console.error("Delete expense error:", error);
         return { error: "Failed to delete expense" };
+    }
+}
+
+export async function getCalendarEvents() {
+    try {
+        const session = await getServerSession(authOptions);
+        let userId = (session?.user as any)?.id;
+
+        if (!userId) {
+            userId = "000000000000000000000001"; // Fallback for dev
+        }
+
+        const rawExpenses = await prisma.expense.findMany({
+            where: { userId },
+            include: { category: true },
+            orderBy: { date: 'asc' }
+        });
+
+        const colorMap: Record<string, string> = {
+            Food: "orange",
+            Transport: "blue",
+            Entertainment: "purple",
+            Shopping: "green",
+            Health: "red",
+            Other: "gray",
+        };
+
+        return rawExpenses.map((r) => {
+            const startDate = new Date(r.date);
+            const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // Default to 1 hour duration
+
+            return {
+                id: r.id,
+                startDate: startDate.toISOString(),
+                endDate: endDate.toISOString(),
+                title: r.description || r.category.name,
+                description: `Category: ${r.category.name} | Amount: ${r.amount.toFixed(2)} TND`,
+                color: (colorMap[r.category.name] || "gray"),
+                amount: r.amount,
+                category: r.category.name
+            };
+        });
+    } catch (error) {
+        console.error("Fetch calendar events error:", error);
+        return [];
+    }
+}
+
+export async function getWeeklyUpcomingBills() {
+    try {
+        const session = await getServerSession(authOptions);
+        let userId = (session?.user as any)?.id;
+
+        if (!userId) {
+            userId = "000000000000000000000001"; // Fallback for dev
+        }
+
+        const now = new Date();
+        const startOfWeek = new Date(now);
+        const day = now.getDay();
+        const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+        startOfWeek.setDate(diff);
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        endOfWeek.setHours(23, 59, 59, 999);
+
+        const bills = await prisma.expense.findMany({
+            where: {
+                userId,
+                date: {
+                    gte: startOfWeek,
+                    lte: endOfWeek
+                }
+            },
+            include: { category: true },
+            orderBy: { date: 'asc' }
+        });
+
+        // Filter for pending status equivalent (future dates)
+        const tonight = new Date(now);
+        tonight.setHours(23, 59, 59, 999);
+
+        return bills.map(b => ({
+            id: b.id,
+            name: b.description || b.category.name,
+            amount: `${b.amount.toFixed(2)} TND`,
+            date: b.date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' }),
+            isOverdue: b.date < startOfWeek, // Should not happen with current filter
+            isDueSoon: b.date >= now && b.date <= tonight,
+            category: b.category.name,
+            color: b.category.color || "#017EFA"
+        }));
+    } catch (error) {
+        console.error("Failed to fetch weekly bills:", error);
+        return [];
     }
 }

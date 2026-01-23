@@ -1,6 +1,27 @@
-export default function UpcomingBills() {
-  const bills: { id: number; name: string; status: string; color: string; date: string }[] = [];
+import { isSameWeek, parseISO } from "date-fns";
+import { cn } from "@/lib/utils";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
+interface Bill {
+  id: string;
+  name: string;
+  status: string;
+  color: string;
+  date: string;
+  fullDate: string | Date;
+  amount: string;
+  category: string;
+}
+
+interface UpcomingBillsProps {
+  bills?: Bill[];
+}
+
+export default function UpcomingBills({ bills = [] }: UpcomingBillsProps) {
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const today = new Date();
@@ -12,15 +33,18 @@ export default function UpcomingBills() {
   const dates = Array.from({ length: 7 }, (_, i) => {
     const date = new Date(today);
     date.setDate(currentDate + mondayOffset + i);
-    return date.getDate();
+    date.setHours(0, 0, 0, 0);
+    return {
+      day: date.getDate(),
+      fullDate: date,
+    };
   });
 
   // Find which index is today
-  const todayIndex = dates.findIndex(date => date === currentDate);
-
+  const todayIndex = dates.findIndex((d) => d.day === currentDate);
 
   return (
-    <div className="bg-white rounded-lg shadow-[0_5px_10px_0_#F1F2FA] p-5">
+    <div className="bg-white rounded-lg shadow-[0_5px_10px_0_#F1F2FA] p-5 text-gray-900">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
         <div className="flex items-center gap-3">
@@ -53,9 +77,7 @@ export default function UpcomingBills() {
 
         <button className="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 rounded-lg group self-start sm:self-auto">
           <span className="font-gilroy-bold text-sm md:text-lg text-[#017EFA]">
-            <a href="/upcoming-bills">
-              See Detail
-            </a>
+            <a href="/upcoming-bills">See Detail</a>
           </span>
           <svg
             width="24"
@@ -90,97 +112,183 @@ export default function UpcomingBills() {
             </div>
 
             {/* Date Cells */}
-            {dates.map((date, i) => {
+            {dates.map((dateObj, i) => {
               const isToday = i === todayIndex;
-              const isWeekend = i === 5 || i === 6; // Sat or Sun
+              const { day, fullDate } = dateObj;
 
-              return (
+              // Find bills for this specific date
+              const dayBills = bills.filter((bill) => {
+                const billDate =
+                  typeof bill.fullDate === "string"
+                    ? parseISO(bill.fullDate)
+                    : bill.fullDate;
+                const d1 = new Date(billDate);
+                d1.setHours(0, 0, 0, 0);
+                const d2 = new Date(fullDate);
+                d2.setHours(0, 0, 0, 0);
+                return d1.getTime() === d2.getTime();
+              });
+
+              const hasBills = dayBills.length > 0;
+
+              const cellContent = (
                 <div
-                  key={`${date}-${i}`}
-                  className={`text-center py-5 border-r border-b border-[#ECEDF3] last:border-r-0 ${isToday
-                    ? "bg-[#017EFA] shadow-lg"
-                    : ""
-                    }`}
+                  key={`${day}-${i}`}
+                  className={cn(
+                    "text-center py-5 border-r border-b border-[#ECEDF3] last:border-r-0 transition-colors",
+                    isToday ? "bg-[#017EFA] shadow-lg" : "",
+                    !isToday && hasBills ? "bg-[#F3F4FB]" : ""
+                  )}
                 >
                   <span
-                    className={`font-gilroy-bold text-sm ${isToday ? "text-white" : "text-[#017EFA]"
-                      }`}
+                    className={cn(
+                      "font-gilroy-bold text-sm",
+                      isToday ? "text-white" : "text-[#017EFA]"
+                    )}
                   >
-                    {date}
+                    {day}
                   </span>
                 </div>
               );
+
+              if (hasBills) {
+                return (
+                  <HoverCard key={`${day}-${i}`}>
+                    <HoverCardTrigger asChild>
+                      {cellContent}
+                    </HoverCardTrigger>
+                    <HoverCardContent className="w-64">
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold border-b pb-1">Bills for {day}</h4>
+                        {dayBills.map((bill) => (
+                          <div key={bill.id} className="text-xs space-y-0.5">
+                            <p className="font-medium text-blue-600">{bill.name}</p>
+                            <div className="flex justify-between text-muted-foreground">
+                              <span>{bill.category}</span>
+                              <span className="font-bold">{bill.amount}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </HoverCardContent>
+                  </HoverCard>
+                );
+              }
+
+              return cellContent;
             })}
           </div>
         </div>
 
         {/* Bills List */}
         <div className="space-y-5">
-          {bills.map((bill) => (
-            <div key={bill.id} className="flex items-start justify-between">
-              <div className="flex items-start gap-4">
-                {/* Icon */}
-                <svg
-                  width="19"
-                  height="16"
-                  viewBox="0 0 19 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                    x="3.13"
-                    y="3.33"
-                    width="12.53"
-                    height="10.67"
-                    rx="2"
-                    stroke={bill.color}
-                    strokeWidth="2"
-                  />
-                  <path
-                    d="M12.53 1.33V3.33C12.53 4.28 12.53 4.75 12.24 5.04C11.95 5.33 11.47 5.33 10.53 5.33H8.27C7.32 5.33 6.85 5.33 6.56 5.04C6.27 4.75 6.27 4.28 6.27 3.33V1.33"
-                    stroke={bill.color}
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M7.05 9.33H11.75"
-                    stroke={bill.status === "paid" ? bill.color : "#017EFA"}
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
+          {bills.map((bill) => {
+            const billDate =
+              typeof bill.fullDate === "string"
+                ? parseISO(bill.fullDate)
+                : bill.fullDate;
+            const isDueThisWeek = isSameWeek(billDate, today, {
+              weekStartsOn: 1,
+            });
 
-                <div>
-                  <div className="font-gilroy-medium text-base text-[#1C1F37]">
-                    {bill.name}
-                  </div>
+            return (
+              <HoverCard key={bill.id}>
+                <HoverCardTrigger asChild>
                   <div
-                    className={`font-gilroy-medium text-xs mt-1 ${bill.status === "paid"
-                      ? "text-[#23B899] opacity-50"
-                      : "text-black opacity-50"
-                      }`}
+                    className={cn(
+                      "flex items-start justify-between p-2 rounded-lg transition-colors cursor-pointer",
+                      isDueThisWeek ? "bg-[#F3F4FB] border border-[#E5E7EB]" : "hover:bg-gray-50"
+                    )}
                   >
-                    {bill.date}
-                  </div>
-                </div>
-              </div>
+                    <div className="flex items-start gap-4">
+                      {/* Icon */}
+                      <svg
+                        width="19"
+                        height="16"
+                        viewBox="0 0 19 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="mt-1"
+                      >
+                        <rect
+                          x="3.13"
+                          y="3.33"
+                          width="12.53"
+                          height="10.67"
+                          rx="2"
+                          stroke={bill.color}
+                          strokeWidth="2"
+                        />
+                        <path
+                          d="M12.53 1.33V3.33C12.53 4.28 12.53 4.75 12.24 5.04C11.95 5.33 11.47 5.33 10.53 5.33H8.27C7.32 5.33 6.85 5.33 6.56 5.04C6.27 4.75 6.27 4.28 6.27 3.33V1.33"
+                          stroke={bill.color}
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                        />
+                        <path
+                          d="M7.05 9.33H11.75"
+                          stroke={
+                            bill.status === "completed" ? bill.color : "#017EFA"
+                          }
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                        />
+                      </svg>
 
-              {/* Options Menu */}
-              <button className="p-2 hover:bg-gray-100 rounded">
-                <svg
-                  width="15"
-                  height="3"
-                  viewBox="0 0 15 3"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle cx="1.57" cy="1.33" r="1.33" fill="#8E8E8E" />
-                  <circle cx="7.05" cy="1.33" r="1.33" fill="#8E8E8E" />
-                  <circle cx="12.53" cy="1.33" r="1.33" fill="#8E8E8E" />
-                </svg>
-              </button>
-            </div>
-          ))}
+                      <div>
+                        <div className="font-gilroy-medium text-base text-[#1C1F37]">
+                          {bill.name}
+                        </div>
+                        <div
+                          className={`font-gilroy-medium text-xs mt-1 ${bill.status === "completed"
+                            ? "text-[#23B899] opacity-70"
+                            : "text-black opacity-50"
+                            }`}
+                        >
+                          {bill.date}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Options Menu */}
+                    <button className="p-2 hover:bg-gray-200 rounded shrink-0">
+                      <svg
+                        width="15"
+                        height="3"
+                        viewBox="0 0 15 3"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle cx="1.57" cy="1.33" r="1.33" fill="#8E8E8E" />
+                        <circle cx="7.05" cy="1.33" r="1.33" fill="#8E8E8E" />
+                        <circle cx="12.53" cy="1.33" r="1.33" fill="#8E8E8E" />
+                      </svg>
+                    </button>
+                  </div>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-80">
+                  <div className="flex justify-between space-x-4">
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-semibold">{bill.name}</h4>
+                      <p className="text-sm">
+                        Amount: <span className="font-bold">{bill.amount}</span>
+                      </p>
+                      <div className="flex items-center pt-2">
+                        <span className="text-xs text-muted-foreground">
+                          Category: {bill.category}
+                        </span>
+                      </div>
+                      <div className="flex items-center pt-1">
+                        <span className={`text-xs font-medium ${bill.status === 'completed' ? 'text-green-600' : 'text-blue-600'}`}>
+                          Status: {bill.status.charAt(0).toUpperCase() + bill.status.slice(1)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+            );
+          })}
         </div>
       </div>
     </div>
