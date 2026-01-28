@@ -9,20 +9,16 @@ import MetricsCard from "@/app/components/MetricsCard";
 import UpcomingBills from "@/app/components/UpcomingBills";
 import RecentTransactions from "@/app/components/RecentTransactions";
 import SpendingTrends from "@/app/components/SpendingTrends";
-import { getDashboardData } from "@/app/actions/expenses";
+import useSWR from "swr";
+
+// Fetcher function
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function DashboardPage() {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchData() {
-      const result = await getDashboardData();
-      setData(result);
-      setLoading(false);
-    }
-    fetchData();
-  }, []);
+  const { data, error, isLoading } = useSWR("/api/dashboard", fetcher, {
+    refreshInterval: 10000, // Poll every 10 seconds
+    revalidateOnFocus: true,
+  });
 
   return (
     <div className="flex">

@@ -5,6 +5,7 @@ import { Download, ChevronDown } from "lucide-react";
 import Layout from "../components/Layout";
 import { getExpenses, deleteExpense } from "../actions/expenses";
 import { useRouter } from "next/navigation";
+import useSWR from 'swr';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -43,9 +44,10 @@ const ThreeDotsIcon = () => (
     </svg>
 );
 
+// Fetcher function
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export default function Expenses() {
-    const [expensesList, setExpensesList] = useState<Expense[]>([]);
-    const [loading, setLoading] = useState(true);
     const [filterStatus, setFilterStatus] = useState<"all" | "completed" | "pending">("all");
     const [sortBy, setSortBy] = useState<"date" | "amount">("date");
     const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
@@ -62,16 +64,16 @@ export default function Expenses() {
     });
     const router = useRouter();
 
-    useEffect(() => {
-        const fetchExpenses = async () => {
-            const data = await getExpenses();
-            setExpensesList(data);
-            setLoading(false);
-        };
-        fetchExpenses();
-    }, []);
+    // useSWR for real-time updates (polls every 10 seconds)
+    const { data: expensesListData, error: swrError, isLoading: swrLoading, mutate } = useSWR('/api/orders', fetcher, {
+        refreshInterval: 10000,
+        revalidateOnFocus: true,
+    });
 
-    const filteredExpenses = expensesList.filter((exp) => {
+    const expensesList = expensesListData || [];
+    const loading = swrLoading && !expensesListData;
+
+    const filteredExpenses = expensesList.filter((exp: Expense) => {
         if (filterStatus === "all") return true;
         return exp.status === filterStatus;
     });
@@ -95,7 +97,8 @@ export default function Expenses() {
 
         const result = await deleteExpense(deleteConfig.id);
         if (result.success) {
-            setExpensesList((prev) => prev.filter((e) => e.id !== deleteConfig.id));
+            // Optimistically update the UI
+            mutate(expensesList.filter((e: Expense) => e.id !== deleteConfig.id), false);
             setActiveMenuId(null);
             setDeleteConfig({ open: false, id: null });
             router.refresh();
