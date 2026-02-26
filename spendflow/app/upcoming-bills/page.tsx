@@ -2,7 +2,6 @@ import Layout from "../components/Layout";
 
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-// Calendar data for January 2026
 const calendarWeeks = [
   [
     { day: 10, isCurrentMonth: true, hasBill: true },

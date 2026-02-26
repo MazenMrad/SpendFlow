@@ -18,7 +18,6 @@ function CalendarContent() {
     useEffect(() => {
         async function fetchEvents() {
             const data = await getCalendarEvents();
-            // @ts-ignore - mapping result to IEvent
             setEvents(data);
             setLoading(false);
         }

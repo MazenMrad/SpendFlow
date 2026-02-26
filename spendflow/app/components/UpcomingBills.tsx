@@ -280,7 +280,6 @@ export default function UpcomingBills({ bills = [] }: UpcomingBillsProps) {
                       </div>
                       <div className="flex items-center pt-1">
                         <span className={`text-xs font-medium ${bill.status === 'completed' ? 'text-green-600' : 'text-blue-600'}`}>
-                          Status: {bill.status.charAt(0).toUpperCase() + bill.status.slice(1)}
                         </span>
                       </div>
                     </div>
