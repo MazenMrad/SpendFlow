@@ -1,0 +1,89 @@
+{
+  "documents": {
+    "tesseract_projectnaptha_com.md": {
+      "url": "https://tesseract.projectnaptha.com/",
+      "title": "Tesseract.js | Pure Javascript OCR for 100 Languages!",
+      "fetchedAt": "2026-04-07T21:07:45.945Z",
+      "expiresAt": "2026-04-08T21:07:45.945Z",
+      "size": 1466
+    },
+    "github_com_naptha_tesseractjs_issues_842.md": {
+      "url": "https://github.com/naptha/tesseract.js/issues/842",
+      "title": "Issue with nextjs app router · Issue #842 · naptha/tesseract.js · GitHub",
+      "fetchedAt": "2026-04-07T21:07:47.330Z",
+      "expiresAt": "2026-04-08T21:07:47.330Z",
+      "size": 3698
+    },
+    "github_com_naptha_tesseractjs_issues_868.md": {
+      "url": "https://github.com/naptha/tesseract.js/issues/868",
+      "title": "NextJS project fails to build when using Tesseract.js · Issue #868 · naptha/tesseract.js · GitHub",
+      "fetchedAt": "2026-04-07T21:07:47.733Z",
+      "expiresAt": "2026-04-08T21:07:47.733Z",
+      "size": 4199
+    },
+    "javascript_plainenglish_io_implementing-ocr-with-tesseract-js-in-next-js-ac41.md": {
+      "url": "https://javascript.plainenglish.io/implementing-ocr-with-tesseract-js-in-next-js-ac4143ff5218",
+      "title": "Implementing OCR with Tesseract.js in Next.js | by Faiz Noeris | JavaScript in Plain English",
+      "fetchedAt": "2026-04-07T21:07:48.909Z",
+      "expiresAt": "2026-04-08T21:07:48.909Z",
+      "size": 7623
+    },
+    "github_com_naptha_tesseractjs.md": {
+      "url": "https://github.com/naptha/tesseract.js",
+      "title": "GitHub - naptha/tesseract.js: Pure Javascript OCR for more than 100 Languages 📖🎉🖥 · GitHub",
+      "fetchedAt": "2026-04-07T21:08:04.650Z",
+      "expiresAt": "2026-04-08T21:08:04.650Z",
+      "size": 10429
+    },
+    "github_com_naptha_tesseractjs_blob_master_docs_performancemd.md": {
+      "url": "https://github.com/naptha/tesseract.js/blob/master/docs/performance.md",
+      "title": "tesseract.js/docs/performance.md at master · naptha/tesseract.js · GitHub",
+      "fetchedAt": "2026-04-07T21:08:17.882Z",
+      "expiresAt": "2026-04-08T21:08:17.882Z",
+      "size": 5218
+    },
+    "github_com_naptha_tesseractjs_blob_master_docs_local-installa.md": {
+      "url": "https://github.com/naptha/tesseract.js/blob/master/docs/local-installation.md",
+      "title": "tesseract.js/docs/local-installation.md at master · naptha/tesseract.js · GitHub",
+      "fetchedAt": "2026-04-07T21:08:18.545Z",
+      "expiresAt": "2026-04-08T21:08:18.545Z",
+      "size": 2897
+    },
+    "github_com_naptha_tesseractjs_blob_master_docs_examplesmd.md": {
+      "url": "https://github.com/naptha/tesseract.js/blob/master/docs/examples.md",
+      "title": "tesseract.js/docs/examples.md at master · naptha/tesseract.js · GitHub",
+      "fetchedAt": "2026-04-07T21:08:18.916Z",
+      "expiresAt": "2026-04-08T21:08:18.916Z",
+      "size": 5132
+    },
+    "github_com_naptha_tesseractjs_blob_master_docs_apimd.md": {
+      "url": "https://github.com/naptha/tesseract.js/blob/master/docs/api.md",
+      "title": "tesseract.js/docs/api.md at master · naptha/tesseract.js · GitHub",
+      "fetchedAt": "2026-04-07T21:08:19.351Z",
+      "expiresAt": "2026-04-08T21:08:19.351Z",
+      "size": 14369
+    },
+    "github_com_naptha_tesseractjs_blob_master_docs_workers_vs_sch.md": {
+      "url": "https://github.com/naptha/tesseract.js/blob/master/docs/workers_vs_schedulers.md",
+      "title": "tesseract.js/docs/workers_vs_schedulers.md at master · naptha/tesseract.js · GitHub",
+      "fetchedAt": "2026-04-07T21:08:19.396Z",
+      "expiresAt": "2026-04-08T21:08:19.396Z",
+      "size": 4318
+    },
+    "github_com_naptha_tesseractjs_blob_master_docs_image-formatmd.md": {
+      "url": "https://github.com/naptha/tesseract.js/blob/master/docs/image-format.md",
+      "title": "tesseract.js/docs/image-format.md at master · naptha/tesseract.js · GitHub",
+      "fetchedAt": "2026-04-07T21:08:29.404Z",
+      "expiresAt": "2026-04-08T21:08:29.404Z",
+      "size": 981
+    },
+    "github_com_naptha_tesseractjs_blob_master_docs_faqmd.md": {
+      "url": "https://github.com/naptha/tesseract.js/blob/master/docs/faq.md",
+      "title": "tesseract.js/docs/faq.md at master · naptha/tesseract.js · GitHub",
+      "fetchedAt": "2026-04-07T21:08:30.850Z",
+      "expiresAt": "2026-04-08T21:08:30.850Z",
+      "size": 8586
+    }
+  },
+  "lastUpdated": "2026-04-07T21:08:30.911Z"
+}

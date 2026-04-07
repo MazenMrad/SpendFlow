@@ -1,0 +1,14 @@
+<svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0"><defs><clipPath id="clip1_1_835">
+<rect width="24" height="24" fill="white" transform="translate(18, 18)"/>
+</clipPath></defs><g id="Group 19">
+<circle id="Ellipse 6" cx="30" cy="30" r="30" fill="#191046"/>
+<g id="fi:wifi-off" clip-path="url(#clip1_1_835)">
+<path id="Vector_13" d="M19,19l22,22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_14" d="M30,38h0.01" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_15" d="M26.53,34.11c1.015,-0.72 2.23,-1.11 3.475,-1.11c1.245,0 2.46,0.39 3.475,1.11" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_16" d="M34.72,29.06c0.819,0.4 1.585,0.9 2.28,1.49" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_17" d="M23,30.55c1.482,-1.24 3.266,-2.06 5.17,-2.39" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_18" d="M19.42,27c1.387,-1.23 2.978,-2.2 4.7,-2.88" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_19" d="M28.71,23.05c2.142,-0.17 4.298,0.09 6.337,0.77c2.039,0.68 3.923,1.76 5.533,3.18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g></svg>
