@@ -41,3 +41,34 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
+
+# sensitive data
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.log
+credentials.json
+*.key
+*.pem
+secrets/
+config/keys/
+config/credentials/
+
+# opencode
+.opencode/
+
+# agent folders
+agents/
+.agent/
+.agents/
+
+# model/cache files
+*.h5
+*.pkl
+*.pickle
+models/
+cache/
+__pycache__/
+*.pyc
