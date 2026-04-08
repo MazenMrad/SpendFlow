@@ -1,95 +1,36 @@
-# SpendFlow 💸
-
-Personal expense tracking and financial management application built with Next.js.
-
-## Features
-
-- 📊 **Dashboard** - View spending metrics and recent transactions
-- 💰 **Expense Tracking** - Add and manage your expenses
-- 📈 **Analytics** - Monthly spending charts and category breakdown
-- 📅 **Upcoming Bills** - Calendar view for bill tracking
-- 🔒 **Authentication** - Secure user accounts with NextAuth.js
-- 🧾 **Receipt Upload** - Upload and parse receipts with OCR
-
-## Tech Stack
-
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **Database**: PostgreSQL with Prisma ORM
-- **Auth**: NextAuth.js
-- **Styling**: Tailwind CSS + shadcn/ui components
-- **Charts**: Recharts
-- **OCR**: Tesseract.js
-
-## Project Structure
-
-```
-spendflow/
-├── app/                    # Next.js App Router pages
-│   ├── account/            # Account settings page
-│   ├── actions/            # Server actions (auth, expenses, receipts)
-│   ├── add-expense/        # Add expense page
-│   ├── api/                # API routes
-│   ├── components/         # App-specific components
-│   ├── dashboard/          # Dashboard page
-│   ├── expenses/           # Expenses list page
-│   ├── icons/              # Custom icons and graphics
-│   ├── login/              # Login page
-│   ├── register/           # Registration page
-│   ├── settings/           # Settings page
-│   └── upcoming-bills/     # Bill tracking calendar
-├── calendar/               # Calendar components
-├── components/             # Shared UI components (shadcn/ui)
-├── hooks/                  # Custom React hooks
-├── lib/                    # Utility libraries
-│   └── ocr/                # OCR utilities
-├── prisma/                 # Database schema
-└── public/                 # Static assets
-```
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
-### Prerequisites
+First, run the development server:
 
-- Node.js 18+
-- PostgreSQL database
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-### Installation
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-3. Set up environment variables:
-   ```bash
-   # Create .env file
-   DATABASE_URL="postgresql://..."
-   NEXTAUTH_SECRET="your-secret-here"
-   NEXTAUTH_URL="http://localhost:3000"
-   ```
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-4. Set up the database:
-   ```bash
-   npx prisma db push
-   ```
+## Learn More
 
-5. Run the development server:
-   ```bash
-   npm run dev
-   ```
+To learn more about Next.js, take a look at the following resources:
 
-6. Open [http://localhost:3000](http://localhost:3000)
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## Environment Variables
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-| Variable | Description |
-|----------|-------------|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `NEXTAUTH_SECRET` | Secret for NextAuth.js |
-| `NEXTAUTH_URL` | Production URL for NextAuth |
+## Deploy on Vercel
 
-## License
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-MIT
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
