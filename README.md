@@ -9,7 +9,7 @@
 
 SpendFlow is a personal expense tracking and budget management application built with Next.js, TypeScript, Prisma, and MongoDB. It helps you track expenses, visualize spending patterns, and manage your budget effectively.
 
-![SpendFlow Dashboard](./spendflow/n8n/Screenshot%202026-04-28%20132503.png)
+![SpendFlow Dashboard](./spendflow/n8n/dashboard-screenshot.png)
 
 ## 🚀 Features
 
@@ -136,7 +136,7 @@ npm run dev
 
 SpendFlow can automatically create expenses from emails using n8n and Gemini AI. The workflow is located in `spendflow/n8n/workflow.json`.
 
-![n8n Workflow](./spendflow/n8n/screenshot.png)
+![n8n Workflow](./spendflow/n8n/workflow-screenshot.png)
 
 ### How It Works
 
