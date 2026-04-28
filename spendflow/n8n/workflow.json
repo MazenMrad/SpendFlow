@@ -22,7 +22,7 @@
       "name": "Gmail Trigger",
       "credentials": {
         "gmailOAuth2": {
-          "id": "8XK596UbMoytYew6",
+          "id": "YOUR_GMAIL_CREDENTIALS_ID",
           "name": "Gmail account"
         }
       }
@@ -100,7 +100,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://semielastically-ungrayed-suk.ngrok-free.dev/api/orders",
+        "url": "https://your-spendflow-url.com/api/orders",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -131,7 +131,7 @@
             },
             {
               "name": "userId",
-              "value": "69699039276ffd3097dd52db"
+              "value": "YOUR_USER_ID"
             }
           ]
         },
@@ -176,7 +176,7 @@
       "name": "HTTP Request1",
       "credentials": {
         "gmailOAuth2": {
-          "id": "8XK596UbMoytYew6",
+          "id": "YOUR_GMAIL_CREDENTIALS_ID",
           "name": "Gmail account"
         }
       }
@@ -222,7 +222,7 @@
       "name": "Message a model",
       "credentials": {
         "googlePalmApi": {
-          "id": "DI1lY3r6ZQnCO3ay",
+          "id": "YOUR_GEMINI_CREDENTIALS_ID",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
