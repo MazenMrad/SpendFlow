@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+**/node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -14,8 +15,24 @@
 /coverage
 
 # next.js
-/.next/
+**/.next/
 /out/
+
+# cache
+.turbo
+.cache/
+.cache
+*.tsbuildinfo
+
+# Next.js dev cache
+**/.next/dev/cache/
+**/.next/server/
+**/.next/static/
+
+# build
+build/
+dist/
+*.log
 
 # production
 /build

@@ -1,7 +1,7 @@
 # SpendFlow - Personal Expense Tracker
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js" alt="Next.js">
+  <img src="https://img.shields.io/badge/Next.js-16.1-black?style=for-the-badge&logo=next.js" alt="Next.js">
   <img src="https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript" alt="TypeScript">
   <img src="https://img.shields.io/badge/Prisma-MongoDB-green?style=for-the-badge&logo=mongodb" alt="Prisma/MongoDB">
   <img src="https://img.shields.io/badge/Tailwind CSS-v4-38bdf8?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS">
@@ -32,7 +32,7 @@ SpendFlow is a personal expense tracking and budget management application built
 - **Authentication**: NextAuth.js with credentials provider
 - **Charts**: Recharts
 - **Calendar**: FullCalendar
-- **OCR**: Tesseract.js for invoice text extraction
+- **OCR**: Tesseract.js for invoice text extraction (client-side)
 
 ## 📁 Project Structure
 
@@ -49,24 +49,22 @@ spendflow/
 │   │   ├── settings/       # User settings
 │   │   └── account/        # Account management
 │   ├── api/                # API routes
-│   │   └── auth/[...nextauth]/  # NextAuth handler
+│   │   ├── auth/[...nextauth]/  # NextAuth handler
+│   │   ├── dashboard/      # Dashboard data API
+│   │   ├── me/             # User info API
+│   │   └── orders/         # Orders API
 │   ├── actions/            # Server actions
 │   │   ├── auth.ts         # Auth actions
-│   │   ├── expenses.ts     # Expense CRUD + OCR upload
-│   │   └── receipts.ts     # Receipt upload
+│   │   └── expenses.ts     # Expense CRUD
 │   └── components/          # Page components
 ├── components/ui/           # Reusable UI components (shadcn/ui style)
-├── hooks/                   # Custom React hooks
-│   └── use-ocr-worker.ts   # Tesseract.js worker hook
 ├── lib/                     # Utilities
 │   ├── auth.ts             # NextAuth config
 │   ├── prisma.ts           # Prisma client
-│   ├── utils.ts            # Helper functions
-│   └── ocr-utils.ts        # Invoice OCR parser
+│   └── utils.ts            # Helper functions
 ├── prisma/
 │   └── schema.prisma       # Database schema
-└── public/uploads/         # Uploaded receipt images
-    └── receipts/
+└── public/                  # Static assets
 ```
 
 ## 🛠️ Getting Started
@@ -121,7 +119,7 @@ npm run dev
 ### Using OCR Invoice Upload
 1. On the Add Expense page, drag or browse for an invoice image
 2. The system will extract text using Tesseract.js
-3. Amount, date, and description are auto-filled
+3. Amount, date, category, type, and description are auto-filled
 4. Review and edit the extracted data
 5. Submit the expense
 
@@ -132,6 +130,52 @@ npm run dev
 - **Recent Transactions** - Latest expense entries
 - **Upcoming Bills** - Calendar view of future expenses
 
+## 🔗 n8n Integration (Email to Expense)
+
+SpendFlow can automatically create expenses from emails using n8n and Gemini AI. The workflow is located in `spendflow/n8n/workflow.json`.
+
+### How It Works
+
+```
+Gmail Trigger → HTTP Request (Get Email) → Code (Parse Email) → Edit Fields → Gemini AI → Code (Parse JSON) → If → HTTP Request (Create Expense)
+```
+
+1. **Gmail Trigger** - Monitors inbox for new emails
+2. **Gemini AI** - Parses email content to extract expense data
+3. **API Route** - Creates expense via `/api/orders`
+
+### n8n Workflow Setup
+
+Import `spendflow/n8n/workflow.json` into your n8n instance.
+
+Required credentials:
+- Gmail OAuth2 (for email access)
+- Google Gemini API (for AI parsing)
+
+### API Endpoint
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/orders` | Create expense from n8n/Gemini |
+
+**Request Body:**
+```json
+{
+  "description": "string",
+  "amount": number,
+  "category": "string",
+  "date": "YYYY-MM-DD",
+  "userId": "string"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true
+}
+```
+
 ## 🔧 Scripts
 
 | Command | Description |
@@ -141,83 +185,6 @@ npm run dev
 | `npm run start` | Start production server |
 | `npm run lint` | Run ESLint |
 | `npx prisma studio` | Open Prisma database GUI |
-
-## 🔗 n8n Integration (Email to Expense)
-
-SpendFlow can automatically create expenses from emails using n8n and Gemini AI:
-
-### How It Works
-
-```
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   Email    │───▶│    n8n      │───▶│   Gemini    │───▶│  SpendFlow  │
-│  (Gmail)   │    │  Workflow   │    │    AI       │    │     API    │
-└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
-```
-
-1. **n8n** monitors your email inbox for invoice/confirmation emails
-2. **Gemini AI** parses the email content to extract expense data
-3. **JSON** is sent to SpendFlow API to create the expense automatically
-
-### n8n Workflow Setup
-
-Create an n8n workflow with:
-
-1. **Email Read Node** (Gmail)
-   - Watch for new emails with invoice keywords
-
-2. **HTTP Request Node** (Gemini)
-   - Send email content to Gemini for parsing
-   - Example prompt: "Extract invoice data: amount, date, vendor, description"
-
-3. **HTTP Request Node** (SpendFlow)
-   - Send POST request to: `https://your-spendflow-url.com/api/expenses/from-email`
-   - Headers: `Content-Type: application/json`
-   - Body (JSON from Gemini):
-   ```json
-   {
-     "amount": 150.00,
-     "date": "2026-04-07",
-     "vendor": "Amazon",
-     "description": "Order #12345",
-     "category": "Shopping",
-     "paymentMethod": "Card"
-   }
-   ```
-
-### API Endpoint
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/expenses/from-email` | Create expense from n8n/Gemini |
-
-**Request Body:**
-```json
-{
-  "amount": number,
-  "date": "YYYY-MM-DD",
-  "vendor": "string",
-  "description": "string",
-  "category": "string",
-  "paymentMethod": "Cash | Card | Check"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "expenseId": "..."
-}
-```
-
-### Adding the API Route
-
-To enable this feature, create `app/api/expenses/from-email/route.ts`:
-
-```typescript
-// See implementation in app/api/expenses/from-email/
-```
 
 ## 📄 Environment Variables
 

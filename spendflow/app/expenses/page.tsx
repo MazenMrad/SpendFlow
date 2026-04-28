@@ -44,7 +44,6 @@ const ThreeDotsIcon = () => (
     </svg>
 );
 
-// Fetcher function
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Expenses() {
@@ -64,8 +63,7 @@ export default function Expenses() {
     });
     const router = useRouter();
 
-    // useSWR for real-time updates (polls every 10 seconds)
-    const { data: expensesListData, error: swrError, isLoading: swrLoading, mutate } = useSWR('/api/orders', fetcher, {
+	const { data: expensesListData, error: swrError, isLoading: swrLoading, mutate } = useSWR('/api/orders', fetcher, {
         refreshInterval: 10000,
         revalidateOnFocus: true,
     });
@@ -96,9 +94,8 @@ export default function Expenses() {
         if (!deleteConfig.id) return;
 
         const result = await deleteExpense(deleteConfig.id);
-        if (result.success) {
-            // Optimistically update the UI
-            mutate(expensesList.filter((e: Expense) => e.id !== deleteConfig.id), false);
+		if (result.success) {
+			mutate(expensesList.filter((e: Expense) => e.id !== deleteConfig.id), false);
             setActiveMenuId(null);
             setDeleteConfig({ open: false, id: null });
             router.refresh();
@@ -128,9 +125,8 @@ export default function Expenses() {
     return (
         <Layout pageTitle="Expenses">
             <div className="px-4 sm:px-8 lg:px-14 py-6 lg:py-14">
-                <div className="max-w-[1800px] mx-auto space-y-6">
-                    {/* Filter and Stats Bar */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white rounded-[20px] p-6 shadow-md">
+		<div className="max-w-[1800px] mx-auto space-y-6">
+			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white rounded-[20px] p-6 shadow-md">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                             <div className="flex items-center gap-2">
                                 <span className="text-base text-gray-600 font-gilroy-bold">Filter:</span>
@@ -217,12 +213,10 @@ export default function Expenses() {
                                 <span className="text-base font-gilroy-bold hidden sm:inline">Export</span>
                             </button>
                         </div>
-                    </div>
+			</div>
 
-                    {/* Expenses Table/List */}
-                    <div className="bg-white rounded-[20px] shadow-md overflow-hidden">
-                        {/* Mobile View */}
-                        <div className="lg:hidden divide-y divide-[#E3E8F1]">
+			<div className="bg-white rounded-[20px] shadow-md overflow-hidden">
+				<div className="lg:hidden divide-y divide-[#E3E8F1]">
                             {sortedExpenses.length === 0 ? (
                                 <div className="p-6 text-center">
                                     <p className="text-gray-500 font-gilroy-regular">No expenses found</p>
@@ -231,7 +225,7 @@ export default function Expenses() {
                                 sortedExpenses.map((expense) => {
                                     const defaultColors = categoryColors[expense.category] || categoryColors.Food;
                                     const bg = expense.categoryColor || defaultColors.bg;
-                                    const text = expense.categoryColor ? "#1C1F37" : defaultColors.text; // Dark text for custom colors
+				const text = expense.categoryColor ? "#1C1F37" : defaultColors.text;
 
                                     return (
                                         <div key={expense.id} className="p-4 sm:p-6">
@@ -284,10 +278,9 @@ export default function Expenses() {
                                     );
                                 })
                             )}
-                        </div>
+				</div>
 
-                        {/* Desktop Table View */}
-                        <div className="hidden lg:block overflow-x-auto">
+				<div className="hidden lg:block overflow-x-auto">
                             <table className="w-full">
                                 <thead className="bg-[#F5F6FB] border-b border-[#E3E8F1]">
                                     <tr>
@@ -391,10 +384,9 @@ export default function Expenses() {
                         </div>
                     </div>
                 </div>
-            </div>
+		</div>
 
-            {/* Delete Confirmation Dialog */}
-            <AlertDialog open={deleteConfig.open} onOpenChange={(open) => setDeleteConfig(prev => ({ ...prev, open }))}>
+		<AlertDialog open={deleteConfig.open} onOpenChange={(open) => setDeleteConfig(prev => ({ ...prev, open }))}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
@@ -409,10 +401,9 @@ export default function Expenses() {
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
-            </AlertDialog>
+		</AlertDialog>
 
-            {/* Error/Info Alert Dialog */}
-            <AlertDialog open={alertConfig.open} onOpenChange={(open) => setAlertConfig(prev => ({ ...prev, open }))}>
+		<AlertDialog open={alertConfig.open} onOpenChange={(open) => setAlertConfig(prev => ({ ...prev, open }))}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>{alertConfig.title}</AlertDialogTitle>

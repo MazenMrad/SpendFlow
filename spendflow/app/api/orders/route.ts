@@ -8,9 +8,9 @@ export async function GET() {
         const session = await getServerSession(authOptions);
         let userId = (session?.user as any)?.id;
 
-        if (!userId) {
-            userId = "000000000000000000000001"; // Fallback for dev/demo if needed
-        }
+	if (!userId) {
+		userId = "000000000000000000000001";
+	}
 
         const expenses = await prisma.expense.findMany({
             where: { userId },
@@ -37,82 +37,65 @@ export async function GET() {
         });
 
         return NextResponse.json(normalizedExpenses);
-    } catch (error) {
-        console.error("GET /api/orders error:", error);
-        return NextResponse.json({ error: "Failed to fetch expenses" }, { status: 500 });
-    }
+	} catch (error) {
+		return NextResponse.json({ error: "Failed to fetch expenses" }, { status: 500 });
+	}
 }
 
 export async function POST(request: Request) {
-    console.log("DEBUG: [POST /api/orders] Request received");
-    try {
-        const body = await request.json();
-        console.log("DEBUG: [POST /api/orders] Body parsed:", JSON.stringify(body));
+	try {
+		const body = await request.json();
 
-        // Allow id and status to be passed from n8n if provided
-        const { id, description, price, amount, category, date, source, status, userId: bodyUserId } = body;
+		const { id, description, price, amount, category, date, source, status, userId: bodyUserId } = body;
 
-        // Use amount if price is not provided
-        const finalPrice = price !== undefined && price !== null ? price : amount;
+		const finalPrice = price !== undefined && price !== null ? price : amount;
 
-        // Use userId from body (pushed by n8n) or a default one
-        const userId = bodyUserId || "000000000000000000000001";
-        console.log("DEBUG: [POST /api/orders] Using userId:", userId);
+		const userId = bodyUserId || "000000000000000000000001";
 
-        // Validate basic requirements
-        if (finalPrice === undefined || finalPrice === null || !category || !date) {
-            console.log("DEBUG: [POST /api/orders] Missing fields. finalPrice:", finalPrice, "category:", category, "date:", date);
-            return NextResponse.json({ error: "Missing required fields: price/amount, category, date" }, { status: 400 });
-        }
+		if (finalPrice === undefined || finalPrice === null || !category || !date) {
+			return NextResponse.json({ error: "Missing required fields: price/amount, category, date" }, { status: 400 });
+		}
 
-        const amountNum = typeof finalPrice === 'string' ? parseFloat(finalPrice) : finalPrice;
-        if (isNaN(amountNum)) {
-            console.log("DEBUG: [POST /api/orders] Invalid price:", finalPrice);
-            return NextResponse.json({ error: "Invalid price format" }, { status: 400 });
-        }
+		const amountNum = typeof finalPrice === 'string' ? parseFloat(finalPrice) : finalPrice;
+		if (isNaN(amountNum)) {
+			return NextResponse.json({ error: "Invalid price format" }, { status: 400 });
+		}
 
-        console.log("DEBUG: [POST /api/orders] Checking category:", category);
-        // Find or create category
-        let categoryRecord = await prisma.category.findFirst({
-            where: {
-                name: category,
-                userId: userId,
-            },
-        });
+		let categoryRecord = await prisma.category.findFirst({
+			where: {
+				name: category,
+				userId: userId,
+			},
+		});
 
-        if (!categoryRecord) {
-            console.log("DEBUG: [POST /api/orders] Category not found, creating...");
-            categoryRecord = await prisma.category.create({
-                data: {
-                    name: category,
-                    userId: userId,
-                    isDefault: false,
-                },
-            });
-        }
+		if (!categoryRecord) {
+			categoryRecord = await prisma.category.create({
+				data: {
+					name: category,
+					userId: userId,
+					isDefault: false,
+				},
+			});
+		}
 
-        console.log("DEBUG: [POST /api/orders] Creating expense record...");
-        const newExpense = await prisma.expense.create({
-            data: {
-                // If n8n provides an ID, we use it (if it's a valid Mongo ID), otherwise Prisma auto-generates
-                ...(id && id.length === 24 ? { id } : {}),
-                amount: amountNum,
-                description: source ? `${description || ""} (Source: ${source})` : (description || category),
-                date: new Date(date),
-                categoryId: categoryRecord.id,
-                userId: userId,
-                status: status || "completed", // Use status from n8n or default to "completed"
-                paymentMethod: "Card",
-            },
-        });
+		const newExpense = await prisma.expense.create({
+			data: {
+				...(id && id.length === 24 ? { id } : {}),
+				amount: amountNum,
+				description: source ? `${description || ""} (Source: ${source})` : (description || category),
+				date: new Date(date),
+				categoryId: categoryRecord.id,
+				userId: userId,
+				status: status || "completed",
+				paymentMethod: "Card",
+			},
+		});
 
-        console.log("DEBUG: [POST /api/orders] SUCCESS! ID:", newExpense.id);
-        return NextResponse.json({ success: true, id: newExpense.id }, { status: 201 });
-    } catch (error) {
-        console.error("DEBUG: [POST /api/orders] CRITICAL ERROR:", error);
-        return NextResponse.json({
-            error: "Failed to create expense",
-            details: error instanceof Error ? error.message : "Unknown error"
-        }, { status: 500 });
-    }
+		return NextResponse.json({ success: true, id: newExpense.id }, { status: 201 });
+	} catch (error) {
+		return NextResponse.json({
+			error: "Failed to create expense",
+			details: error instanceof Error ? error.message : "Unknown error"
+		}, { status: 500 });
+	}
 }

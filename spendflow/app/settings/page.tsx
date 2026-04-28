@@ -149,21 +149,17 @@ export default function Settings() {
         <Layout pageTitle="Settings">
             <div className="px-4 sm:px-8 lg:px-14 py-8 lg:py-14">
 
-                <div className="max-w-[692px] mx-auto">
-                    {/* Settings card */}
-                    <div className="relative bg-white rounded-[39px] shadow-[0_4px_20px_0_rgba(0,0,0,0.25),0_5px_10px_0_#F1F2FA] p-6 sm:p-8 lg:p-12">
-                        {/* User profile section */}
-                        <div className="flex flex-col items-center mb-8 lg:mb-10">
+	<div className="max-w-[692px] mx-auto">
+		<div className="relative bg-white rounded-[39px] shadow-[0_4px_20px_0_rgba(0,0,0,0.25),0_5px_10px_0_#F1F2FA] p-6 sm:p-8 lg:p-12">
+			<div className="flex flex-col items-center mb-8 lg:mb-10">
                             <div className="w-16 h-16 lg:w-20 lg:h-20 bg-[#EAECF2] rounded-full mb-4"></div>
                             <h2 className="text-sm font-bold font-inter">{session?.user?.name || "Guest"}</h2>
                         </div>
 
-                        <div className="w-full h-px bg-[#DADADA] opacity-50 mb-8 lg:mb-10"></div>
+			<div className="w-full h-px bg-[#DADADA] opacity-50 mb-8 lg:mb-10"></div>
 
-                        {/* Settings form */}
-                        <div className="space-y-5 lg:space-y-7 mb-10 lg:mb-12">
-                            {/* Currency */}
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+			<div className="space-y-5 lg:space-y-7 mb-10 lg:mb-12">
+				<div className="flex flex-col sm:flex-row sm:items-center gap-2">
                                 <label className="text-sm font-gilroy-bold sm:w-[85px] flex-shrink-0">Currency</label>
                                 <div className="flex-1">
                                     <select
@@ -174,10 +170,9 @@ export default function Settings() {
                                         <option value="tnd">TND</option>
                                     </select>
                                 </div>
-                            </div>
+				</div>
 
-                            {/* Language */}
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+				<div className="flex flex-col sm:flex-row sm:items-center gap-2">
                                 <label className="text-sm font-gilroy-bold sm:w-[85px] flex-shrink-0">Language</label>
                                 <div className="flex-1">
                                     <select
@@ -188,10 +183,9 @@ export default function Settings() {
                                         <option value="en">English</option>
                                     </select>
                                 </div>
-                            </div>
+				</div>
 
-                            {/* Monthly Budget Goal */}
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+				<div className="flex flex-col sm:flex-row sm:items-center gap-2">
                                 <label className="text-sm font-gilroy-bold sm:w-[85px] flex-shrink-0">
                                     Monthly Budget Goal
                                 </label>
@@ -213,10 +207,9 @@ export default function Settings() {
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+				</div>
 
-                            {/* Add Custom Categorie */}
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+				<div className="flex flex-col sm:flex-row sm:items-center gap-2">
                                 <label className="text-sm font-gilroy-bold sm:w-[85px] flex-shrink-0">
                                     Add Custom Categorie
                                 </label>
@@ -237,11 +230,10 @@ export default function Settings() {
                                             className="h-12 px-6 bg-[#017EFA] hover:bg-[#016bd6] text-white rounded-lg font-gilroy-bold transition-colors cursor-pointer"
                                         >
                                             Add
-                                        </button>
-                                    </div>
+					</button>
+				</div>
 
-                                    {/* Categories Badges */}
-                                    <div className="flex flex-wrap gap-2 mt-3">
+				<div className="flex flex-wrap gap-2 mt-3">
                                         {categories.map((cat) => (
                                             <div
                                                 key={cat.id}
@@ -263,20 +255,18 @@ export default function Settings() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+			</div>
 
-                        {/* Action buttons */}
-                        <div className="flex flex-col items-center gap-4 mb-6 lg:mb-8">
+			<div className="flex flex-col items-center gap-4 mb-6 lg:mb-8">
                             <button
                                 onClick={() => signOut({ callbackUrl: "/" })}
                                 className="w-full sm:w-[150px] h-12 bg-red-500 hover:bg-red-600 text-white rounded-[50px] font-poppins transition-colors cursor-pointer"
                             >
                                 Logout
                             </button>
-                        </div>
+			</div>
 
-                        {/* Export Data */}
-                        <div className="flex items-center justify-end gap-2">
+			<div className="flex items-center justify-end gap-2">
                             <span className="text-[11px] text-black/[0.46] font-bold font-inter">
                                 Export Data
                             </span>

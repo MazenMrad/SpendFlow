@@ -1,0 +1,330 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1696,
+        96
+      ],
+      "id": "304b5072-fb31-41bb-8a62-93f3b09440fb",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "8XK596UbMoytYew6",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7bb8a19f-cab0-4927-84e9-981ba14c79c1",
+              "name": "snippet",
+              "value": "={{ $json.body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1024,
+        96
+      ],
+      "id": "0c00bd34-ae81-419f-9830-6c22e193422c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "const aiText = $input.first().json.content.parts[0].text;\nconst cleaned = aiText.replace(/```json|```/g, '').trim();\nconst parsed = JSON.parse(cleaned);\nreturn [{ json: parsed }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        96
+      ],
+      "id": "3946bf2a-ee10-450c-ac60-6626c390c054",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1705b9b5-93bd-40e5-881d-1cd27dabd99c",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -16,
+        96
+      ],
+      "id": "f8fe8c55-4d8d-4121-846e-9b91a46b3d8c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://semielastically-ungrayed-suk.ngrok-free.dev/api/orders",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "invocie",
+              "value": "={{ $json.isInvoice }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "description",
+              "value": "={{ $json.description }}"
+            },
+            {
+              "name": "amount",
+              "value": "={{ $json.amount }}"
+            },
+            {
+              "name": "category",
+              "value": "={{ $json.category }}"
+            },
+            {
+              "name": "date",
+              "value": "={{ $json.dueDate ? $json.dueDate : $now.format('yyyy-MM-dd') }}\n"
+            },
+            {
+              "name": "userId",
+              "value": "69699039276ffd3097dd52db"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "3f249ee1-1238-44d5-aa3d-e5fd14b56118",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "errorMessage": "error"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        208,
+        192
+      ],
+      "id": "3cd6db69-f4e2-4680-9fd4-3346edba6492",
+      "name": "Stop and Error"
+    },
+    {
+      "parameters": {
+        "url": "=https://gmail.googleapis.com/gmail/v1/users/me/messages/{{$json.id}}?format=full",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "gmailOAuth2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1472,
+        96
+      ],
+      "id": "906948e2-9491-42fc-acc5-a82e089d353a",
+      "name": "HTTP Request1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "8XK596UbMoytYew6",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $json.payload;\nlet body = '';\n\nif (payload.parts) {\n  const part = payload.parts.find(p => p.mimeType === 'text/plain') \n            || payload.parts.find(p => p.mimeType === 'text/html');\n  if (part?.body?.data) {\n    body = Buffer.from(part.body.data, 'base64').toString('utf-8');\n  }\n} else if (payload.body?.data) {\n  body = Buffer.from(payload.body.data, 'base64').toString('utf-8');\n}\n\nconst headers = payload.headers || [];\nconst get = (name) => headers.find(h => h.name === name)?.value || '';\n\nreturn [{\n  json: {\n    subject: get('Subject'),\n    from: get('From'),\n    date: get('Date'),\n    body: body.slice(0, 3000)\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1248,
+        96
+      ],
+      "id": "8e58d597-2e05-4118-a1c6-7c8cd36a3b2e",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=\nYou are a financial document classifier.  Analyze the email subject {{ $json.snippet }} and body and determine if it contains an invoice, facture, or bill. Reply ONLY with JSON in this exact format: {   \"isInvoice\": true/false,   \"amount\": number or null,   \"description\": \"brief description\",   \"category\": \"Food|Transport|Shopping|General|Electronics|Entertainment\",   \"vendor\": \"vendor name or null\",   \"dueDate\": \"YYYY-MM-DD or null\" }\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -704,
+        80
+      ],
+      "id": "b6682dba-047e-4f36-ba6a-5f6d9dc475df",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "DI1lY3r6ZQnCO3ay",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "54c480c5-fa3d-41e9-bf82-4e0e11e0f72a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fc23ef52cd06c253d29e59696c18c65afadc42f210a7438c8e6cef77537c0050"
+  },
+  "id": "PVQHhjPbU5adneVOHGWbL",
+  "tags": []
+}
